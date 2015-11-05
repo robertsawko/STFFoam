@@ -1,0 +1,7 @@
+*.swp
+*.dep
+linux64GccDP*
+*/*.csv
+lnInclude
+gmon.out
+*.pyc
