@@ -5,3 +5,6 @@ linux64GccDP*
 lnInclude
 gmon.out
 *.pyc
+postProcessing
+dynamicCode
+polyMesh
