@@ -118,12 +118,6 @@ set_source_files_properties(filename.c PROPERTIES LANGUAGE CXX )
 # add_subdirectory(ext/gtest/)
 # include_directories(${GTEST_INCLUDE_DIRS})
 
-#Library
-add_subdirectory(src/translationalFrames)
-#add_subdirectory(src/multiphaseTurbulence)
 
-#Solvers
-add_subdirectory(applications)
-
-#Utilities
-#add_subdirectory(app/util)
+# Library
+add_subdirectory(src)
