@@ -64,22 +64,12 @@ flags = [
     'c++',
     # This path will only work on OS X, but extra paths that don't exist are
     # not harmful
-    '-I' + foam_src + '/transportModels/',
-    '-I' + foam_src + '/transportModels/incompressible/lnInclude',
-    '-I' + foam_app + '/solvers/multiphase/twoPhaseEulerFoam/twoPhaseSystem/' \
-    + 'lnInclude',
-    '-I' + foam_app + '/solvers/multiphase/twoPhaseEulerFoam/' \
-    + 'phaseCompressibleTurbulenceModels/lnInclude',
-    '-I' + foam_app + '/solvers/multiphase/interfacialModels/lnInclude',
-    '-I' + foam_src + '/transportModels/incompressible/lnInclude',
     '-I' + foam_src + '/finiteVolume/lnInclude',
     '-I' + foam_src + '/fvOptions/lnInclude',
     '-I' + foam_src + '/OpenFOAM/lnInclude',
-    '-I./src/translationalFrames/',
-    '-I./src/translationalFrames/velocityIntegrators',
+    '-I./src/',
     '-I.',
     '-I' + foam_src + '/OSspecific/POSIX/lnInclude',
-    '-I./build/ext/gtest/src/googletest/include/gtest',
     '-include ' + foam_src + 'finiteVolume/lnInclude/volFieldsFwd.H'
 ]
 

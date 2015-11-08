@@ -1,11 +1,6 @@
 cmake_minimum_required (VERSION 2.6)
 project (STFSolvers)
 
-configure_file (
-  "${PROJECT_SOURCE_DIR}/STFConfig.h.in"
-  "${PROJECT_SOURCE_DIR}/STFConfig.h"
-)
-
 #TODO: switch between Opt and Debug mode
 
 #The build is based on OpenFOAM environmental varialbles Need to check 
@@ -20,19 +15,23 @@ else()
 endif()
 
 #TODO Is there a better way to break lines?
-set(CMAKE_CXX_FLAGS "-m64 -Dlinux64 -DWM_DP")
-#g++ will inform you of unused typedefs and we want to suppress this as there
-#are typedefs like this in OF
+set(CMAKE_CXX_FLAGS "-m64 -Dlinux64 -DWM_ARCH_OPTION=64 -DWM_DP")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DWM_LABEL_SIZE=32 -std=c++11")
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-unused-local-typedefs")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wold-style-cast -Wnon-virtual-dtor")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-variable")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -DNoRepository -ftemplate-depth-100")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Xlinker --add-needed -Xlinker --no-as-needed")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -DNoRepository")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftemplate-depth-100")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Xlinker --add-needed")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Xlinker --no-as-needed")
 else ()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGTEST_HAS_TR1_TUPLE=0 -std=c++11 -wd327,654,819,1125,1476,1505,1572 -xSSE3 -O2 -no-prec-div  -DNoRepository")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGTEST_HAS_TR1_TUPLE=0")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -wd327,654,819,1125,1476,1505,1572")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -xSSE3 -O2 -no-prec-div")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNoRepository")
 endif()
 
 #define a macro to simplify adding OpenFOAM libraries
@@ -104,6 +103,7 @@ enable_testing()
 
 option (UseOldLibs "Use old libraries" OFF)
 #General includes required by all code
+include_directories ("$ENV{FOAM_SRC}/fvOptions/lnInclude")
 include_directories ("$ENV{FOAM_SRC}/finiteVolume/lnInclude")
 include_directories ("$ENV{FOAM_SRC}/meshTools/lnInclude")
 include_directories ("$ENV{FOAM_SRC}/OpenFOAM/lnInclude")
