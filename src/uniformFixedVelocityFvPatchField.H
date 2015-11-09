@@ -75,20 +75,19 @@ namespace Foam
                 Class uniformFixedVelocityFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
-template<class Type>
 class uniformFixedVelocityFvPatchField
 :
-    public fixedValueFvPatchField<Type>
+    public fixedValueFvPatchField<vector>
 {
     // Private data
 
-        autoPtr<DataEntry<Type> > uniformValue_;
+        autoPtr<DataEntry<vector> > uniformValue_;
 
 
 public:
 
     //- Runtime type information
-    TypeName("uniformFixedValue");
+    vectorName("uniformFixedValue");
 
 
     // Constructors
@@ -97,22 +96,22 @@ public:
         uniformFixedVelocityFvPatchField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&
+            const DimensionedField<vector, volMesh>&
         );
 
         //- Construct from patch and internal field and patch field
         uniformFixedVelocityFvPatchField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
-            const Field<Type>& fld
+            const DimensionedField<vector, volMesh>&,
+            const Field<vector>& fld
         );
 
         //- Construct from patch, internal field and dictionary
         uniformFixedVelocityFvPatchField
         (
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<vector, volMesh>&,
             const dictionary&
         );
 
@@ -120,43 +119,43 @@ public:
         //  onto a new patch
         uniformFixedVelocityFvPatchField
         (
-            const uniformFixedVelocityFvPatchField<Type>&,
+            const uniformFixedVelocityFvPatchField&,
             const fvPatch&,
-            const DimensionedField<Type, volMesh>&,
+            const DimensionedField<vector, volMesh>&,
             const fvPatchFieldMapper&
         );
 
         //- Construct as copy
         uniformFixedVelocityFvPatchField
         (
-            const uniformFixedVelocityFvPatchField<Type>&
+            const uniformFixedVelocityFvPatchField&
         );
 
         //- Construct and return a clone
-        virtual tmp<fvPatchField<Type> > clone() const
+        virtual tmp<fvPatchField<vector> > clone() const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<vector> >
             (
-                new uniformFixedVelocityFvPatchField<Type>(*this)
+                new uniformFixedVelocityFvPatchField(*this)
             );
         }
 
         //- Construct as copy setting internal field reference
         uniformFixedVelocityFvPatchField
         (
-            const uniformFixedVelocityFvPatchField<Type>&,
-            const DimensionedField<Type, volMesh>&
+            const uniformFixedVelocityFvPatchField&,
+            const DimensionedField<vector, volMesh>&
         );
 
         //- Construct and return a clone setting internal field reference
-        virtual tmp<fvPatchField<Type> > clone
+        virtual tmp<fvPatchField<vector> > clone
         (
-            const DimensionedField<Type, volMesh>& iF
+            const DimensionedField<vector, volMesh>& iF
         ) const
         {
-            return tmp<fvPatchField<Type> >
+            return tmp<fvPatchField<vector> >
             (
-                new uniformFixedVelocityFvPatchField<Type>(*this, iF)
+                new uniformFixedVelocityFvPatchField(*this, iF)
             );
         }
 

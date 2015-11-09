@@ -27,72 +27,67 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-template<class Type>
-Foam::uniformFixedVelocityFvPatchField<Type>::uniformFixedVelocityFvPatchField
+Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF
+    const DimensionedField<vector, volMesh>& iF
 )
 :
-    fixedValueFvPatchField<Type>(p, iF),
+    fixedValueFvPatchField<vector>(p, iF),
     uniformValue_()
 {}
 
 
-template<class Type>
-Foam::uniformFixedVelocityFvPatchField<Type>::uniformFixedVelocityFvPatchField
+Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
-    const Field<Type>& fld
+    const DimensionedField<vector, volMesh>& iF,
+    const Field<vector>& fld
 )
 :
-    fixedValueFvPatchField<Type>(p, iF, fld),
+    fixedValueFvPatchField<vector>(p, iF, fld),
     uniformValue_()
 {}
 
 
-template<class Type>
-Foam::uniformFixedVelocityFvPatchField<Type>::uniformFixedVelocityFvPatchField
+Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField
 (
-    const uniformFixedVelocityFvPatchField<Type>& ptf,
+    const uniformFixedVelocityFvPatchField& ptf,
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<vector, volMesh>& iF,
     const fvPatchFieldMapper& mapper
 )
 :
-    fixedValueFvPatchField<Type>(p, iF),  // bypass mapper
+    fixedValueFvPatchField<vector>(p, iF),  // bypass mapper
     uniformValue_(ptf.uniformValue_().clone().ptr())
 {
     // Evaluate since value not mapped
     const scalar t = this->db().time().timeOutputValue();
-    fvPatchField<Type>::operator==(uniformValue_->value(t));
+    fvPatchField<vector>::operator==(uniformValue_->value(t));
 }
 
 
-template<class Type>
-Foam::uniformFixedVelocityFvPatchField<Type>::uniformFixedVelocityFvPatchField
+Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField
 (
     const fvPatch& p,
-    const DimensionedField<Type, volMesh>& iF,
+    const DimensionedField<vector, volMesh>& iF,
     const dictionary& dict
 )
 :
-    fixedValueFvPatchField<Type>(p, iF),
-    uniformValue_(DataEntry<Type>::New("uniformValue", dict))
+    fixedValueFvPatchField<vector>(p, iF),
+    uniformValue_(DataEntry<vector>::New("uniformValue", dict))
 {
     const scalar t = this->db().time().timeOutputValue();
-    fvPatchField<Type>::operator==(uniformValue_->value(t));
+    fvPatchField<vector>::operator==(uniformValue_->value(t));
 }
 
 
-template<class Type>
-Foam::uniformFixedVelocityFvPatchField<Type>::uniformFixedVelocityFvPatchField
+Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField
 (
-    const uniformFixedVelocityFvPatchField<Type>& ptf
+    const uniformFixedVelocityFvPatchField& ptf
 )
 :
-    fixedValueFvPatchField<Type>(ptf),
+    fixedValueFvPatchField<vector>(ptf),
     uniformValue_
     (
         ptf.uniformValue_.valid()
@@ -102,14 +97,13 @@ Foam::uniformFixedVelocityFvPatchField<Type>::uniformFixedVelocityFvPatchField
 {}
 
 
-template<class Type>
-Foam::uniformFixedVelocityFvPatchField<Type>::uniformFixedVelocityFvPatchField
+Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField
 (
-    const uniformFixedVelocityFvPatchField<Type>& ptf,
-    const DimensionedField<Type, volMesh>& iF
+    const uniformFixedVelocityFvPatchField& ptf,
+    const DimensionedField<vector, volMesh>& iF
 )
 :
-    fixedValueFvPatchField<Type>(ptf, iF),
+    fixedValueFvPatchField<vector>(ptf, iF),
     uniformValue_
     (
         ptf.uniformValue_.valid()
@@ -122,15 +116,14 @@ Foam::uniformFixedVelocityFvPatchField<Type>::uniformFixedVelocityFvPatchField
 
     if (ptf.uniformValue_.valid())
     {
-        fvPatchField<Type>::operator==(uniformValue_->value(t));
+        fvPatchField<vector>::operator==(uniformValue_->value(t));
     }
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-template<class Type>
-void Foam::uniformFixedVelocityFvPatchField<Type>::updateCoeffs()
+void Foam::uniformFixedVelocityFvPatchField::updateCoeffs()
 {
     if (this->updated())
     {
@@ -138,16 +131,15 @@ void Foam::uniformFixedVelocityFvPatchField<Type>::updateCoeffs()
     }
 
     const scalar t = this->db().time().timeOutputValue();
-    fvPatchField<Type>::operator==(uniformValue_->value(t));
+    fvPatchField<vector>::operator==(uniformValue_->value(t));
 
-    fixedValueFvPatchField<Type>::updateCoeffs();
+    fixedValueFvPatchField<vector>::updateCoeffs();
 }
 
 
-template<class Type>
-void Foam::uniformFixedVelocityFvPatchField<Type>::write(Ostream& os) const
+void Foam::uniformFixedVelocityFvPatchField::write(Ostream& os) const
 {
-    fvPatchField<Type>::write(os);
+    fvPatchField<vector>::write(os);
     uniformValue_->writeData(os);
     this->writeEntry("value", os);
 }
