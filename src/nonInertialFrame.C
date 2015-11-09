@@ -27,6 +27,7 @@ License
 #include "fvCFD.H"
 #include "geometricOneField.H"
 #include "addToRunTimeSelectionTable.H"
+#include "uniformFixedVelocityFvPatchField.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -53,17 +54,29 @@ Foam::fv::nonInertialFrame::nonInertialFrame(const word &name,
                                              const fvMesh &mesh)
     : option(name, modelType, dict, mesh),
       VF_(coeffs_.lookupOrDefault<vector>("velocity", vector::zero)),
-      //VF_("V", dimVelocity, vector(0, 0, 0)),
+      // VF_("V", dimVelocity, vector(0, 0, 0)),
       UName_(coeffs_.lookupOrDefault<word>("UName", "U")),
       g0_("g0", dimAcceleration, vector::zero) {
-  fieldNames_.setSize(1, UName_);
-  applied_.setSize(1, false);
+    fieldNames_.setSize(1, UName_);
+    applied_.setSize(1, false);
 
-  if (mesh.foundObject<uniformDimensionedVectorField>("g")) {
-    g0_ = mesh.lookupObject<uniformDimensionedVectorField>("g");
-  }
+    if (mesh.foundObject<uniformDimensionedVectorField>("g")) {
+        g0_ = mesh.lookupObject<uniformDimensionedVectorField>("g");
+    }
+
+    // Registering BCs
+    const volVectorField& U = mesh.lookupObject<volVectorField>(UName_);
+    const volVectorField::GeometricBoundaryField& patches = U.boundaryField();
+
+    forAll (patches, patchi)
+    {
+        const fvPatchVectorField& currPatch = patches[patchi];
+        if (isA<uniformFixedVelocityFvPatchField>(currPatch)) {
+            Info<< "Registering: " << currPatch.patch().name() << " patch of "
+                << UName_ << " field. " << endl;
+        }
+    }
 }
-
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 /*
