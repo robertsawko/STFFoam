@@ -27,7 +27,7 @@ mu = 1.0
 
 g = 9.81
 
-Res = linspace(0, 1, 11)
+Res = linspace(0, 0.01, 11)
 volume = pi / 6 * D**3
 
 for Re in Res:
@@ -37,5 +37,5 @@ for Re in Res:
     mass_p = rho_p * volume
     apparent_mass = (rho_p - rho_f) * volume
     print(
-        "Re={0:0.2f}; V_t={1:0.1f} rhop={2:0.2f} m={3:0.3f} ma={4:0.3f}, Fg={5:0.3f}".format(
+        "Re={0:0.3g}; V_t={1:0.3g} rhop={2:0.3g} m={3:0.3g} ma={4:0.3g}, Fg={5:0.3g}".format(
             Re, V_t, rho_p, mass_p, apparent_mass, apparent_mass * g))
