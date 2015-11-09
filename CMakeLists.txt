@@ -120,4 +120,5 @@ set_source_files_properties(filename.c PROPERTIES LANGUAGE CXX )
 
 
 # Library
+add_subdirectory(applications)
 add_subdirectory(src)
