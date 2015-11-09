@@ -99,14 +99,6 @@ public:
             const DimensionedField<vector, volMesh>&
         );
 
-        //- Construct from patch and internal field and patch field
-        uniformFixedVelocityFvPatchField
-        (
-            const fvPatch&,
-            const DimensionedField<vector, volMesh>&,
-            const Field<vector>& fld
-        );
-
         //- Construct from patch, internal field and dictionary
         uniformFixedVelocityFvPatchField
         (
@@ -179,10 +171,6 @@ public:
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-#ifdef NoRepository
-#   include "uniformFixedVelocityFvPatchField.C"
-#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

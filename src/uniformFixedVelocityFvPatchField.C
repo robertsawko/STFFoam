@@ -24,6 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "uniformFixedVelocityFvPatchField.H"
+#include "addToRunTimeSelectionTable.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
@@ -34,18 +35,6 @@ Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField
 )
 :
     fixedValueFvPatchField<vector>(p, iF),
-    uniformValue_()
-{}
-
-
-Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField
-(
-    const fvPatch& p,
-    const DimensionedField<vector, volMesh>& iF,
-    const Field<vector>& fld
-)
-:
-    fixedValueFvPatchField<vector>(p, iF, fld),
     uniformValue_()
 {}
 
