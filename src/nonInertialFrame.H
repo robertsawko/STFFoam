@@ -54,6 +54,7 @@ SourceFiles
 
 #include "fvOption.H"
 #include "dimensionedTypes.H"
+#include <vector>
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -77,6 +78,8 @@ protected:
   word UName_;
 
   dimensionedVector g0_;
+
+  std::vector<label> patchIDs;
 
 private:
   // Private Member Functions
@@ -108,7 +111,7 @@ public:
   // Member Functions
   //
 
-  // virtual void correct(volVectorField& field);
+  virtual void correct(volVectorField& field);
 
   //- Source term to momentum equation
   // virtual void addSup(fvMatrix<vector> &eqn, const label fieldi);

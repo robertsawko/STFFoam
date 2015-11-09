@@ -74,6 +74,7 @@ Foam::fv::nonInertialFrame::nonInertialFrame(const word &name,
         if (isA<uniformFixedVelocityFvPatchField>(currPatch)) {
             Info<< "Registering: " << currPatch.patch().name() << " patch of "
                 << UName_ << " field. " << endl;
+            patchIDs.push_back(patchi);
         }
     }
 }
@@ -117,9 +118,12 @@ bool Foam::fv::nonInertialFrame::read(const dictionary& dict)
     return true;
 }
 
-/*
-void correct(volVectorField& field){
+void Foam::fv::nonInertialFrame::correct(volVectorField& field){
 
+    for(auto id: patchIDs){
+        Info<< id;
+    }
+/*
     volScalarField::GeometricBoundaryField& patches = field.boundaryField();
     forAll (patches, patchi)
     {
@@ -129,7 +133,7 @@ void correct(volVectorField& field){
             (refCast<STFInletOutletFvPatchField> (currPatch))
         }
     }
+    */
 }
-*/
 
 // ************************************************************************* //
