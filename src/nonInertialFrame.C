@@ -24,8 +24,7 @@ License
 \*---------------------------------------------------------------------------*/
 
 #include "nonInertialFrame.H"
-#include "fvMesh.H"
-#include "fvMatrices.H"
+#include "fvCFD.H"
 #include "geometricOneField.H"
 #include "addToRunTimeSelectionTable.H"
 
@@ -48,31 +47,26 @@ namespace fv
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::nonInertialFrame::nonInertialFrame
-(
-    const word& name,
-    const word& modelType,
-    const dictionary& dict,
-    const fvMesh& mesh
-)
-:
-    option(name, modelType, dict, mesh),
-    motion_(coeffs_, mesh.time()),
-    UName_(coeffs_.lookupOrDefault<word>("UName", "U")),
-    g0_("g0", dimAcceleration, vector::zero)
-{
-    fieldNames_.setSize(1, UName_);
-    applied_.setSize(1, false);
+Foam::fv::nonInertialFrame::nonInertialFrame(const word &name,
+                                             const word &modelType,
+                                             const dictionary &dict,
+                                             const fvMesh &mesh)
+    : option(name, modelType, dict, mesh),
+      VF_(coeffs_.lookupOrDefault<vector>("velocity", vector::zero)),
+      //VF_("V", dimVelocity, vector(0, 0, 0)),
+      UName_(coeffs_.lookupOrDefault<word>("UName", "U")),
+      g0_("g0", dimAcceleration, vector::zero) {
+  fieldNames_.setSize(1, UName_);
+  applied_.setSize(1, false);
 
-    if (mesh.foundObject<uniformDimensionedVectorField>("g"))
-    {
-        g0_ = mesh.lookupObject<uniformDimensionedVectorField>("g");
-    }
+  if (mesh.foundObject<uniformDimensionedVectorField>("g")) {
+    g0_ = mesh.lookupObject<uniformDimensionedVectorField>("g");
+  }
 }
 
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
+/*
 void Foam::fv::nonInertialFrame::addSup
 (
     fvMatrix<vector>& eqn,
@@ -92,10 +86,12 @@ void Foam::fv::nonInertialFrame::addSup
 {
     addSup<volScalarField>(rho, eqn, fieldi);
 }
+*/
 
 
 bool Foam::fv::nonInertialFrame::read(const dictionary& dict)
 {
+    /*
     if (option::read(dict))
     {
         return motion_.read(coeffs_);
@@ -104,7 +100,23 @@ bool Foam::fv::nonInertialFrame::read(const dictionary& dict)
     {
         return false;
     }
+    */
+    return true;
 }
 
+/*
+void correct(volVectorField& field){
+
+    volScalarField::GeometricBoundaryField& patches = field.boundaryField();
+    forAll (patches, patchi)
+    {
+        fvPatchScalarField& currPatch = patches[patchi];
+        if (isA<STFInletOutletFvPatchField>(currPatch))
+        {
+            (refCast<STFInletOutletFvPatchField> (currPatch))
+        }
+    }
+}
+*/
 
 // ************************************************************************* //

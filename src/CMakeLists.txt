@@ -4,3 +4,5 @@ file(GLOB lib_source_files
 )
 
 add_library(STF SHARED ${lib_source_files})
+set_target_properties (STF PROPERTIES LIBRARY_OUTPUT_DIRECTORY 
+    "$ENV{FOAM_USER_LIBBIN}")

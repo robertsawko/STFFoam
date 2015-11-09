@@ -53,7 +53,6 @@ SourceFiles
 #define nonInertialFrame_H
 
 #include "fvOption.H"
-#include "tabulated6DoFAcceleration.H"
 #include "dimensionedTypes.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -67,86 +66,59 @@ namespace fv
                           Class nonInertialFrame Declaration
 \*---------------------------------------------------------------------------*/
 
-class nonInertialFrame
-:
-    public option
-{
+class nonInertialFrame : public option {
 
 protected:
+  // Protected data
 
-    // Protected data
+  //- Run-time selectable acceleration model
+  vector VF_;
 
-        //- Run-time selectable acceleration model
-        tabulated6DoFAcceleration motion_;
+  word UName_;
 
-        //- Velocity field name, default = U
-        word UName_;
-
-        dimensionedVector g0_;
+  dimensionedVector g0_;
 
 private:
+  // Private Member Functions
 
-    // Private Member Functions
+  //- Disallow default bitwise copy construct
+  nonInertialFrame(const nonInertialFrame &);
 
-        //- Disallow default bitwise copy construct
-        nonInertialFrame(const nonInertialFrame&);
+  //- Disallow default bitwise assignment
+  void operator=(const nonInertialFrame &);
 
-        //- Disallow default bitwise assignment
-        void operator=(const nonInertialFrame&);
-
-
-        //- Source term to momentum equation
-        template<class RhoFieldType>
-        void addSup
-        (
-            const RhoFieldType& rho,
-            fvMatrix<vector>& eqn,
-            const label fieldi
-        );
-
+  //- Source term to momentum equation
+  // template <class RhoFieldType>
+  // void addSup(const RhoFieldType &rho, fvMatrix<vector> &eqn,
+  //            const label fieldi);
 
 public:
+  //- Runtime type information
+  TypeName("nonInertialFrame");
 
-    //- Runtime type information
-    TypeName("nonInertialFrame");
+  // Constructors
 
+  //- Construct from components
+  nonInertialFrame(const word &name, const word &modelType,
+                   const dictionary &dict, const fvMesh &mesh);
 
-    // Constructors
+  //- Destructor
+  virtual ~nonInertialFrame() {}
 
-        //- Construct from components
-        nonInertialFrame
-        (
-            const word& name,
-            const word& modelType,
-            const dictionary& dict,
-            const fvMesh& mesh
-        );
+  // Member Functions
+  //
 
+  // virtual void correct(volVectorField& field);
 
-    //- Destructor
-    virtual ~nonInertialFrame()
-    {}
+  //- Source term to momentum equation
+  // virtual void addSup(fvMatrix<vector> &eqn, const label fieldi);
 
+  //- Source term to compressible momentum equation
+  // virtual void addSup(const volScalarField &rho, fvMatrix<vector> &eqn, const
+  // label fieldi);
 
-    // Member Functions
-
-        //- Source term to momentum equation
-        virtual void addSup
-        (
-            fvMatrix<vector>& eqn,
-            const label fieldi
-        );
-
-        //- Source term to compressible momentum equation
-        virtual void addSup
-        (
-            const volScalarField& rho,
-            fvMatrix<vector>& eqn,
-            const label fieldi
-        );
-
-        //- Read dictionary
-        virtual bool read(const dictionary& dict);
+  //- Read dictionary
+  virtual bool read(const dictionary &dict);
 };
 
 
@@ -157,9 +129,9 @@ public:
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-#ifdef NoRepository
-    #include "nonInertialFrameTemplates.C"
-#endif
+//#ifdef NoRepository
+    //#include "nonInertialFrameTemplates.C"
+//#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

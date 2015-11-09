@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+/*
 #include "nonInertialFrame.H"
 #include "fvMesh.H"
 #include "fvMatrices.H"
@@ -99,5 +100,6 @@ void Foam::fv::nonInertialFrame::addSup
     );
 }
 
+*/
 
 // ************************************************************************* //
