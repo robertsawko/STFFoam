@@ -145,4 +145,12 @@ void Foam::uniformFixedVelocityFvPatchField::write(Ostream& os) const
 }
 
 
+namespace Foam
+{
+   makePatchTypeField
+   (
+       fvPatchVectorField,
+       uniformFixedVelocityFvPatchField
+   );
+}
 // ************************************************************************* //
