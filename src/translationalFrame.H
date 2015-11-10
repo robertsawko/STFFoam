@@ -60,9 +60,6 @@ SourceFiles
 
 namespace Foam
 {
-namespace fv
-{
-
 /*---------------------------------------------------------------------------*\
                           Class translationalFrame Declaration
 \*---------------------------------------------------------------------------*/
@@ -75,7 +72,7 @@ protected:
   vector VF_;
   word UName_;
 
-  dimensionedVector g0_;
+  // dimensionedVector g0_;
 
   std::vector<label> patchIDs;
 
@@ -89,9 +86,6 @@ private:
   void operator=(const translationalFrame &);
 
 public:
-  //- Runtime type information
-  TypeName("translationalFrame");
-
   // Constructors
 
   //- Construct from components
@@ -103,7 +97,7 @@ public:
   // Member Functions
   //
 
-  virtual void correct(volVectorField& field);
+  virtual void correctBoundaryVelocity(volVectorField& U);
 
   //- Source term to momentum equation
   // virtual void addSup(fvMatrix<vector> &eqn, const label fieldi);
@@ -112,21 +106,14 @@ public:
   // virtual void addSup(const volScalarField &rho, fvMatrix<vector> &eqn, const
   // label fieldi);
 
-  //- Read dictionary
-  virtual bool read(const dictionary &dict);
 };
 
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-} // End namespace fv
 } // End namespace Foam
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-
-//#ifdef NoRepository
-    //#include "translationalFrameTemplates.C"
-//#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

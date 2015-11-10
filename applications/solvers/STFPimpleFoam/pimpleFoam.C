@@ -40,6 +40,7 @@ Description
 #include "pimpleControl.H"
 #include "fvIOoptionList.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
+#include "translationalFrame.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -53,7 +54,7 @@ int main(int argc, char *argv[])
 
     #include "createTimeControls.H"
     #include "createFields.H"
-    // STF frameOfReference;
+    translationalFrame frameOfReference(mesh);
     #include "createFvOptions.H"
     #include "initContinuityErrs.H"
 

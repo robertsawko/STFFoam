@@ -1,6 +1,6 @@
 // Solve the Momentum equation
 
-//translationalFrame.correctBoundaryVelocity(U);
+frameOfReference.correctBoundaryVelocity(U);
 
 tmp<fvVectorMatrix> UEqn
 (

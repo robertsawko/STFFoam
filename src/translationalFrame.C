@@ -32,12 +32,12 @@ License
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::translationalFrame::translationalFrame(const fvMesh &mesh)
+Foam::translationalFrame::translationalFrame(const fvMesh &mesh)
     : dict_(IOobject("STFProperties",
-                            mesh.time().constant(),
-                            mesh,
-                            IOobject::MUST_READ_IF_MODIFIED,
-                            IOobject::NO_WRITE)),
+                     mesh.time().constant(),
+                     mesh,
+                     IOobject::MUST_READ_IF_MODIFIED,
+                     IOobject::NO_WRITE)),
       mesh_(mesh), VF_(dict_.lookupOrDefault<vector>("velocity", vector::zero)),
       // VF_("V", dimVelocity, vector(0, 0, 0)),
       UName_(dict_.lookupOrDefault<word>("UName", "U"))
@@ -55,8 +55,8 @@ Foam::fv::translationalFrame::translationalFrame(const fvMesh &mesh)
     forAll(patches, patchi) {
         const fvPatchVectorField &currPatch = patches[patchi];
         if (isA<uniformFixedVelocityFvPatchField>(currPatch)) {
-            Info << "Registering: " << currPatch.patch().name() << " patch of "
-                 << UName_ << " field. " << endl;
+            Info<< "Registering: " << currPatch.patch().name() << " patch of "
+                << UName_ << " field. " << endl;
             patchIDs.push_back(patchi);
         }
     }
@@ -64,22 +64,23 @@ Foam::fv::translationalFrame::translationalFrame(const fvMesh &mesh)
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
-void Foam::fv::translationalFrame::correct(volVectorField& field){
+void Foam::translationalFrame::correctBoundaryVelocity(
+    volVectorField &field) {
 
-    for(auto id: patchIDs){
-        Info<< id;
+    for (auto id : patchIDs) {
+        Info << id;
     }
-/*
-    volScalarField::GeometricBoundaryField& patches = field.boundaryField();
-    forAll (patches, patchi)
-    {
-        fvPatchScalarField& currPatch = patches[patchi];
-        if (isA<STFInletOutletFvPatchField>(currPatch))
+    /*
+        volScalarField::GeometricBoundaryField& patches = field.boundaryField();
+        forAll (patches, patchi)
         {
-            (refCast<STFInletOutletFvPatchField> (currPatch))
+            fvPatchScalarField& currPatch = patches[patchi];
+            if (isA<STFInletOutletFvPatchField>(currPatch))
+            {
+                (refCast<STFInletOutletFvPatchField> (currPatch))
+            }
         }
-    }
-    */
+        */
 }
 
 // ************************************************************************* //
