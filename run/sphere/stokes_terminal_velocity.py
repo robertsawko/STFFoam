@@ -27,7 +27,7 @@ mu = 1.0
 
 g = 9.81
 
-Res = linspace(0, 0.01, 11)
+Res = linspace(0, 1, 11)
 volume = pi / 6 * D**3
 
 for Re in Res:

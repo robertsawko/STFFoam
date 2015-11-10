@@ -66,17 +66,6 @@ namespace Foam
 \*---------------------------------------------------------------------------*/
 
 class translationalFrame {
-
-protected:
-  IOdictionary dict_;
-  const fvMesh& mesh_;
-  vector VF_;
-  word UName_;
-
-  // dimensionedVector g0_;
-
-  std::vector<uniformFixedVelocityFvPatchField*> registeredPatches;
-
 private:
   // Private Member Functions
 
@@ -85,29 +74,26 @@ private:
 
   //- Disallow default bitwise assignment
   void operator=(const translationalFrame &);
+  IOdictionary dict_;
+  const fvMesh& mesh_;
+  vector VF_;
+  word UName_;
+
+  //- The ID of the patch identifying the front
+  label sphereI_;
+  scalar mass_;
+  scalar apparentMass_;
+
+  std::vector<uniformFixedVelocityFvPatchField*> registeredPatches;
 
 public:
-  // Constructors
-
-  //- Construct from components
   translationalFrame(const fvMesh &mesh);
 
-  //- Destructor
   virtual ~translationalFrame() {}
-
-  // Member Functions
-  //
 
   void registerVelocity(volVectorField& U); 
   void correctBoundaryVelocity(volVectorField& U) const; 
-
-  //- Source term to momentum equation
-  // virtual void addSup(fvMatrix<vector> &eqn, const label fieldi);
-
-  //- Source term to compressible momentum equation
-  // virtual void addSup(const volScalarField &rho, fvMatrix<vector> &eqn, const
-  // label fieldi);
-
+  void update(const volScalarField& p, const volSymmTensorField& R); 
 };
 
 

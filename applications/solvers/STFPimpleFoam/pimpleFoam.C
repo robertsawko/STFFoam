@@ -91,6 +91,7 @@ int main(int argc, char *argv[])
             }
         }
 
+        frameOfReference.update(p, turbulence->devReff());
         runTime.write();
 
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"

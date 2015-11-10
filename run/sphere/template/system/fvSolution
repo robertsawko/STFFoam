@@ -49,7 +49,7 @@ PIMPLE
 {
     nOuterCorrectors 50;
     momentumPredictor yes;
-    nCorrectors     2;
+    nCorrectors     5;
     nNonOrthogonalCorrectors 3;
     pRefCell        0;
     pRefValue       0;
@@ -58,7 +58,7 @@ PIMPLE
         U
         {
             relTol 0;
-            tolerance 1e-4;
+            tolerance 1e-5;
         }
     }
 }

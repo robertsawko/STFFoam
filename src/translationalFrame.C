@@ -38,7 +38,10 @@ Foam::translationalFrame::translationalFrame(const fvMesh &mesh)
                      IOobject::MUST_READ_IF_MODIFIED,
                      IOobject::NO_WRITE)),
       mesh_(mesh), VF_(dict_.lookupOrDefault<vector>("velocity", vector::zero)),
-      UName_(dict_.lookupOrDefault<word>("UName", "U"))
+      UName_(dict_.lookupOrDefault<word>("UName", "U")),
+      sphereI_(mesh_.boundaryMesh().findPatchID("sphere")),
+      mass_(readScalar(dict_.lookup("mass"))),
+      apparentMass_(readScalar(dict_.lookup("apparentMass")))
 {
     // Registering BCs
 }
@@ -66,6 +69,28 @@ void Foam::translationalFrame::correctBoundaryVelocity(
     for (auto patch : registeredPatches) {
         patch->correct(VF_);
     }
+}
+
+void Foam::translationalFrame::update(const volScalarField &p,
+                                      const volSymmTensorField &R) {
+
+    vector pressure = gSum(mesh_.Sf().boundaryField()[sphereI_] *
+                           p.boundaryField()[sphereI_]);
+
+    vector viscous = gSum(mesh_.Sf().boundaryField()[sphereI_] &
+                          R.boundaryField()[sphereI_]);
+
+    vector gravity(0, 0, -9.81);
+
+    vector F_net = pressure + viscous + apparentMass_ * gravity;
+    F_net.y() = 0;
+    F_net.x() = 0;
+    vector aF = F_net / mass_;
+
+    VF_ += (mesh_.time().deltaTValue() * aF);
+    Info << "Pressure: " << pressure << "\nViscous: " << viscous
+         << "\nMass: " << apparentMass_ * gravity << "\nVelocity: " << VF_
+         << endl;
 }
 
 // ************************************************************************* //
