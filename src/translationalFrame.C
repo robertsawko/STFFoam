@@ -23,7 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "nonInertialFrame.H"
+#include "translationalFrame.H"
 #include "fvCFD.H"
 #include "geometricOneField.H"
 #include "addToRunTimeSelectionTable.H"
@@ -35,11 +35,11 @@ namespace Foam
 {
 namespace fv
 {
-    defineTypeNameAndDebug(nonInertialFrame, 0);
+    defineTypeNameAndDebug(translationalFrame, 0);
     addToRunTimeSelectionTable
     (
         option,
-        nonInertialFrame,
+        translationalFrame,
         dictionary
     );
 }
@@ -48,7 +48,7 @@ namespace fv
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::nonInertialFrame::nonInertialFrame(const word &name,
+Foam::fv::translationalFrame::translationalFrame(const word &name,
                                              const word &modelType,
                                              const dictionary &dict,
                                              const fvMesh &mesh)
@@ -81,7 +81,7 @@ Foam::fv::nonInertialFrame::nonInertialFrame(const word &name,
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 /*
-void Foam::fv::nonInertialFrame::addSup
+void Foam::fv::translationalFrame::addSup
 (
     fvMatrix<vector>& eqn,
     const label fieldi
@@ -91,7 +91,7 @@ void Foam::fv::nonInertialFrame::addSup
 }
 
 
-void Foam::fv::nonInertialFrame::addSup
+void Foam::fv::translationalFrame::addSup
 (
     const volScalarField& rho,
     fvMatrix<vector>& eqn,
@@ -103,7 +103,7 @@ void Foam::fv::nonInertialFrame::addSup
 */
 
 
-bool Foam::fv::nonInertialFrame::read(const dictionary& dict)
+bool Foam::fv::translationalFrame::read(const dictionary& dict)
 {
     /*
     if (option::read(dict))
@@ -118,7 +118,7 @@ bool Foam::fv::nonInertialFrame::read(const dictionary& dict)
     return true;
 }
 
-void Foam::fv::nonInertialFrame::correct(volVectorField& field){
+void Foam::fv::translationalFrame::correct(volVectorField& field){
 
     for(auto id: patchIDs){
         Info<< id;

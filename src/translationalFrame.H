@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::nonInertialFrame
+    Foam::fv::translationalFrame
 
 Description
     Solid-body 6-DoF acceleration source
@@ -33,10 +33,10 @@ Description
     \verbatim
     SBM
     {
-        type            nonInertialFrame;
+        type            translationalFrame;
         active          yes;
 
-        nonInertialFrameCoeffs
+        translationalFrameCoeffs
         {
             timeDataFileName "constant/acceleration-terms.dat";
         }
@@ -45,12 +45,12 @@ Description
 
 
 SourceFiles
-    nonInertialFrame.C
+    translationalFrame.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef nonInertialFrame_H
-#define nonInertialFrame_H
+#ifndef translationalFrame_H
+#define translationalFrame_H
 
 #include "fvOption.H"
 #include "dimensionedTypes.H"
@@ -64,10 +64,10 @@ namespace fv
 {
 
 /*---------------------------------------------------------------------------*\
-                          Class nonInertialFrame Declaration
+                          Class translationalFrame Declaration
 \*---------------------------------------------------------------------------*/
 
-class nonInertialFrame : public option {
+class translationalFrame : public option {
 
 protected:
   // Protected data
@@ -85,10 +85,10 @@ private:
   // Private Member Functions
 
   //- Disallow default bitwise copy construct
-  nonInertialFrame(const nonInertialFrame &);
+  translationalFrame(const translationalFrame &);
 
   //- Disallow default bitwise assignment
-  void operator=(const nonInertialFrame &);
+  void operator=(const translationalFrame &);
 
   //- Source term to momentum equation
   // template <class RhoFieldType>
@@ -97,16 +97,16 @@ private:
 
 public:
   //- Runtime type information
-  TypeName("nonInertialFrame");
+  TypeName("translationalFrame");
 
   // Constructors
 
   //- Construct from components
-  nonInertialFrame(const word &name, const word &modelType,
+  translationalFrame(const word &name, const word &modelType,
                    const dictionary &dict, const fvMesh &mesh);
 
   //- Destructor
-  virtual ~nonInertialFrame() {}
+  virtual ~translationalFrame() {}
 
   // Member Functions
   //
@@ -133,7 +133,7 @@ public:
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 //#ifdef NoRepository
-    //#include "nonInertialFrameTemplates.C"
+    //#include "translationalFrameTemplates.C"
 //#endif
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

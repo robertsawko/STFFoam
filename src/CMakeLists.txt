@@ -1,5 +1,5 @@
 file(GLOB lib_source_files
-  nonInertialFrame.C
+  translationalFrame.C
   uniformFixedVelocityFvPatchField.C
 )
 
