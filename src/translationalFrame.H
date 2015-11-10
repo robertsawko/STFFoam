@@ -52,7 +52,7 @@ SourceFiles
 #ifndef translationalFrame_H
 #define translationalFrame_H
 
-#include "fvOption.H"
+#include "fvMesh.H"
 #include "dimensionedTypes.H"
 #include <vector>
 
@@ -67,14 +67,12 @@ namespace fv
                           Class translationalFrame Declaration
 \*---------------------------------------------------------------------------*/
 
-class translationalFrame : public option {
+class translationalFrame {
 
 protected:
-  // Protected data
-
-  //- Run-time selectable acceleration model
+  IOdictionary dict_;
+  const fvMesh& mesh_;
   vector VF_;
-
   word UName_;
 
   dimensionedVector g0_;
@@ -90,11 +88,6 @@ private:
   //- Disallow default bitwise assignment
   void operator=(const translationalFrame &);
 
-  //- Source term to momentum equation
-  // template <class RhoFieldType>
-  // void addSup(const RhoFieldType &rho, fvMatrix<vector> &eqn,
-  //            const label fieldi);
-
 public:
   //- Runtime type information
   TypeName("translationalFrame");
@@ -102,8 +95,7 @@ public:
   // Constructors
 
   //- Construct from components
-  translationalFrame(const word &name, const word &modelType,
-                   const dictionary &dict, const fvMesh &mesh);
+  translationalFrame(const fvMesh &mesh);
 
   //- Destructor
   virtual ~translationalFrame() {}

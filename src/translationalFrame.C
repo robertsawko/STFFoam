@@ -26,97 +26,43 @@ License
 #include "translationalFrame.H"
 #include "fvCFD.H"
 #include "geometricOneField.H"
-#include "addToRunTimeSelectionTable.H"
 #include "uniformFixedVelocityFvPatchField.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
-namespace Foam
-{
-namespace fv
-{
-    defineTypeNameAndDebug(translationalFrame, 0);
-    addToRunTimeSelectionTable
-    (
-        option,
-        translationalFrame,
-        dictionary
-    );
-}
-}
-
-
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fv::translationalFrame::translationalFrame(const word &name,
-                                             const word &modelType,
-                                             const dictionary &dict,
-                                             const fvMesh &mesh)
-    : option(name, modelType, dict, mesh),
-      VF_(coeffs_.lookupOrDefault<vector>("velocity", vector::zero)),
+Foam::fv::translationalFrame::translationalFrame(const fvMesh &mesh)
+    : dict_(IOobject("STFProperties",
+                            mesh.time().constant(),
+                            mesh,
+                            IOobject::MUST_READ_IF_MODIFIED,
+                            IOobject::NO_WRITE)),
+      mesh_(mesh), VF_(dict_.lookupOrDefault<vector>("velocity", vector::zero)),
       // VF_("V", dimVelocity, vector(0, 0, 0)),
-      UName_(coeffs_.lookupOrDefault<word>("UName", "U")),
-      g0_("g0", dimAcceleration, vector::zero) {
-    fieldNames_.setSize(1, UName_);
-    applied_.setSize(1, false);
+      UName_(dict_.lookupOrDefault<word>("UName", "U"))
+// g0_("g0", dimAcceleration, vector::zero)
+{
 
-    if (mesh.foundObject<uniformDimensionedVectorField>("g")) {
-        g0_ = mesh.lookupObject<uniformDimensionedVectorField>("g");
-    }
+    // if (mesh_.foundObject<uniformDimensionedVectorField>("g")) {
+    // g0_ = mesh.lookupObject<uniformDimensionedVectorField>("g");
+    //}
 
     // Registering BCs
-    const volVectorField& U = mesh.lookupObject<volVectorField>(UName_);
-    const volVectorField::GeometricBoundaryField& patches = U.boundaryField();
+    const volVectorField &U = mesh.lookupObject<volVectorField>(UName_);
+    const volVectorField::GeometricBoundaryField &patches = U.boundaryField();
 
-    forAll (patches, patchi)
-    {
-        const fvPatchVectorField& currPatch = patches[patchi];
+    forAll(patches, patchi) {
+        const fvPatchVectorField &currPatch = patches[patchi];
         if (isA<uniformFixedVelocityFvPatchField>(currPatch)) {
-            Info<< "Registering: " << currPatch.patch().name() << " patch of "
-                << UName_ << " field. " << endl;
+            Info << "Registering: " << currPatch.patch().name() << " patch of "
+                 << UName_ << " field. " << endl;
             patchIDs.push_back(patchi);
         }
     }
 }
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-/*
-void Foam::fv::translationalFrame::addSup
-(
-    fvMatrix<vector>& eqn,
-    const label fieldi
-)
-{
-    addSup<geometricOneField>(geometricOneField(), eqn, fieldi);
-}
-
-
-void Foam::fv::translationalFrame::addSup
-(
-    const volScalarField& rho,
-    fvMatrix<vector>& eqn,
-    const label fieldi
-)
-{
-    addSup<volScalarField>(rho, eqn, fieldi);
-}
-*/
-
-
-bool Foam::fv::translationalFrame::read(const dictionary& dict)
-{
-    /*
-    if (option::read(dict))
-    {
-        return motion_.read(coeffs_);
-    }
-    else
-    {
-        return false;
-    }
-    */
-    return true;
-}
 
 void Foam::fv::translationalFrame::correct(volVectorField& field){
 
