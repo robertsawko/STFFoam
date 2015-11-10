@@ -74,7 +74,7 @@ namespace Foam {
                 Class uniformFixedVelocityFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
-class uniformFixedVelocityFvPatchField : public fixedValueFvPatchField<vector> {
+class uniformFixedVelocityFvPatchField : public fixedValueFvPatchVectorField {
     // Private data
 
     autoPtr<DataEntry<vector>> uniformValue_;
@@ -104,6 +104,7 @@ class uniformFixedVelocityFvPatchField : public fixedValueFvPatchField<vector> {
 
     //- Construct as copy
     uniformFixedVelocityFvPatchField(const uniformFixedVelocityFvPatchField &);
+    virtual ~uniformFixedVelocityFvPatchField() {}
 
     //- Construct and return a clone
     virtual tmp<fvPatchField<vector>> clone() const {
@@ -129,7 +130,7 @@ class uniformFixedVelocityFvPatchField : public fixedValueFvPatchField<vector> {
     //- Update the coefficients associated with the patch field
     virtual void updateCoeffs();
 
-    virtual void correct(const vector& VF);
+    virtual void correct(const vector &VF);
 
     //- Write
     virtual void write(Ostream &) const;

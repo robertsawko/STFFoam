@@ -34,19 +34,20 @@ import ycm_core
 
 foam_app = os.environ['FOAM_APP']
 foam_src = os.environ['FOAM_SRC']
-
 flags = [
+    '-DSTF_EXPORTS',
     '-m64',
     '-Dlinux64',
+    '-DWM_ARCH_OPTION=64',
     '-DWM_DP',
+    '-DWM_LABEL_SIZE=32', '-std=c++11',
+    '-Wno-unused-local-typedefs',
     '-Wall',
     '-Wextra',
     '-Wno-unused-parameter',
     '-Wold-style-cast',
     '-Wnon-virtual-dtor',
-    '-DNoRepository',
-    '-Wno-unused-result',
-    '-ftemplate-depth-100',
+    '-Wno-unused-variable'
     # '-DNDEBUG',
     # '-DUSE_CLANG_COMPLETER',
     # THIS IS IMPORTANT! Without a "-std=<something>" flag, clang won't know
@@ -64,13 +65,15 @@ flags = [
     'c++',
     # This path will only work on OS X, but extra paths that don't exist are
     # not harmful
-    '-I' + foam_src + '/finiteVolume/lnInclude',
     '-I' + foam_src + '/fvOptions/lnInclude',
+    '-I' + foam_src + '/finiteVolume/lnInclude',
+    '-I' + foam_src + '/meshTools/lnInclude',
     '-I' + foam_src + '/OpenFOAM/lnInclude',
     '-I./src/',
     '-I.',
     '-I' + foam_src + '/OSspecific/POSIX/lnInclude',
-    '-include ' + foam_src + 'finiteVolume/lnInclude/volFieldsFwd.H'
+    '-include ' + foam_src + '/OpenFOAM/lnInclude/Vector.H'
+    '-include ' + foam_src + '/finiteVolume/lnInclude/volFieldsFwd.H'
 ]
 
 # Set this to the absolute path to the folder (NOT the file!) containing the

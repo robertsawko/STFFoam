@@ -9,7 +9,7 @@ surfaceScalarField phiHbyA
   + fvc::interpolate(rAU)*fvc::ddtCorr(U, phi)
 );
 
-//MRF.makeRelative(phiHbyA);
+// translationalFrame.makeRelative(phiHbyA);
 
 adjustPhi(phiHbyA, U, p);
 
