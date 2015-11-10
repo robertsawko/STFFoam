@@ -5,7 +5,7 @@ frameOfReference.correctBoundaryVelocity(U);
 tmp<fvVectorMatrix> UEqn
 (
     fvm::ddt(U) + fvm::div(phi, U)
-  // + MRF.DDt(U)
+  + frameOfReference.aF()
   + turbulence->divDevReff(U)
  ==
     fvOptions(U)

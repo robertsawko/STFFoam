@@ -69,6 +69,7 @@ int main(int argc, char *argv[])
         #include "CourantNo.H"
         #include "setDeltaT.H"
 
+        frameOfReference.update(p, turbulence->devReff());
         runTime++;
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
@@ -91,7 +92,6 @@ int main(int argc, char *argv[])
             }
         }
 
-        frameOfReference.update(p, turbulence->devReff());
         runTime.write();
 
         Info<< "ExecutionTime = " << runTime.elapsedCpuTime() << " s"

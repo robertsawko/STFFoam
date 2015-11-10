@@ -66,36 +66,39 @@ namespace Foam
 \*---------------------------------------------------------------------------*/
 
 class translationalFrame {
-private:
-  // Private Member Functions
+  private:
+    // Private Member Functions
 
-  //- Disallow default bitwise copy construct
-  translationalFrame(const translationalFrame &);
+    //- Disallow default bitwise copy construct
+    translationalFrame(const translationalFrame &);
 
-  //- Disallow default bitwise assignment
-  void operator=(const translationalFrame &);
-  IOdictionary dict_;
-  const fvMesh& mesh_;
-  vector VF_;
-  word UName_;
+    //- Disallow default bitwise assignment
+    void operator=(const translationalFrame &);
+    IOdictionary dict_;
+    const fvMesh &mesh_;
+    vector VF_;
+    vector aF_;
+    word UName_;
 
-  //- The ID of the patch identifying the front
-  label sphereI_;
-  scalar mass_;
-  scalar apparentMass_;
+    //- The ID of the patch identifying the front
+    label sphereI_;
+    scalar mass_;
+    scalar apparentMass_;
 
-  std::vector<uniformFixedVelocityFvPatchField*> registeredPatches;
+    std::vector<uniformFixedVelocityFvPatchField *> registeredPatches;
 
-public:
-  translationalFrame(const fvMesh &mesh);
+  public:
+    translationalFrame(const fvMesh &mesh);
 
-  virtual ~translationalFrame() {}
+    virtual ~translationalFrame() {}
 
-  void registerVelocity(volVectorField& U); 
-  void correctBoundaryVelocity(volVectorField& U) const; 
-  void update(const volScalarField& p, const volSymmTensorField& R); 
+    void registerVelocity(volVectorField &U);
+    void correctBoundaryVelocity(volVectorField &U) const;
+    void update(const volScalarField &p, const volSymmTensorField &R);
+    dimensionedVector aF() const {
+        return dimensionedVector("aF", dimAcceleration, aF_);
+    }
 };
-
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

@@ -37,7 +37,7 @@ Foam::translationalFrame::translationalFrame(const fvMesh &mesh)
                      mesh,
                      IOobject::MUST_READ_IF_MODIFIED,
                      IOobject::NO_WRITE)),
-      mesh_(mesh), VF_(dict_.lookupOrDefault<vector>("velocity", vector::zero)),
+      mesh_(mesh), VF_(vector::zero), aF_(vector::zero),
       UName_(dict_.lookupOrDefault<word>("UName", "U")),
       sphereI_(mesh_.boundaryMesh().findPatchID("sphere")),
       mass_(readScalar(dict_.lookup("mass"))),
@@ -85,9 +85,9 @@ void Foam::translationalFrame::update(const volScalarField &p,
     vector F_net = pressure + viscous + apparentMass_ * gravity;
     F_net.y() = 0;
     F_net.x() = 0;
-    vector aF = F_net / mass_;
+    aF_ = F_net / mass_;
 
-    VF_ += (mesh_.time().deltaTValue() * aF);
+    VF_ += (mesh_.time().deltaTValue() * aF_);
     Info << "Pressure: " << pressure << "\nViscous: " << viscous
          << "\nMass: " << apparentMass_ * gravity << "\nVelocity: " << VF_
          << endl;
