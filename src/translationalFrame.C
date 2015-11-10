@@ -26,7 +26,6 @@ License
 #include "translationalFrame.H"
 #include "fvCFD.H"
 #include "geometricOneField.H"
-#include "uniformFixedVelocityFvPatchField.H"
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 
@@ -39,25 +38,22 @@ Foam::translationalFrame::translationalFrame(const fvMesh &mesh)
                      IOobject::MUST_READ_IF_MODIFIED,
                      IOobject::NO_WRITE)),
       mesh_(mesh), VF_(dict_.lookupOrDefault<vector>("velocity", vector::zero)),
-      // VF_("V", dimVelocity, vector(0, 0, 0)),
       UName_(dict_.lookupOrDefault<word>("UName", "U"))
-// g0_("g0", dimAcceleration, vector::zero)
 {
-
-    // if (mesh_.foundObject<uniformDimensionedVectorField>("g")) {
-    // g0_ = mesh.lookupObject<uniformDimensionedVectorField>("g");
-    //}
-
     // Registering BCs
-    const volVectorField &U = mesh.lookupObject<volVectorField>(UName_);
-    const volVectorField::GeometricBoundaryField &patches = U.boundaryField();
+}
+
+void Foam::translationalFrame::registerVelocity(volVectorField &U) {
+    volVectorField::GeometricBoundaryField &patches = U.boundaryField();
 
     forAll(patches, patchi) {
-        const fvPatchVectorField &currPatch = patches[patchi];
+        fvPatchVectorField &currPatch = patches[patchi];
         if (isA<uniformFixedVelocityFvPatchField>(currPatch)) {
-            Info<< "Registering: " << currPatch.patch().name() << " patch of "
-                << UName_ << " field. " << endl;
-            patchIDs.push_back(patchi);
+            Info << "Registering: " << currPatch.patch().name() << " patch of "
+                 << UName_ << " field. " << endl;
+            uniformFixedVelocityFvPatchField &p =
+                refCast<uniformFixedVelocityFvPatchField>(currPatch);
+            registeredPatches.push_back(&p);
         }
     }
 }
@@ -65,22 +61,11 @@ Foam::translationalFrame::translationalFrame(const fvMesh &mesh)
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::translationalFrame::correctBoundaryVelocity(
-    volVectorField &field) {
+    volVectorField& U) const {
 
-    for (auto id : patchIDs) {
-        Info << id;
+    for (auto patch : registeredPatches) {
+        patch->correct(VF_);
     }
-    /*
-        volScalarField::GeometricBoundaryField& patches = field.boundaryField();
-        forAll (patches, patchi)
-        {
-            fvPatchScalarField& currPatch = patches[patchi];
-            if (isA<STFInletOutletFvPatchField>(currPatch))
-            {
-                (refCast<STFInletOutletFvPatchField> (currPatch))
-            }
-        }
-        */
 }
 
 // ************************************************************************* //

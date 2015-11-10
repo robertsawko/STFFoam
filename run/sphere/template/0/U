@@ -41,7 +41,7 @@ boundaryField
     bottom
     {
         type            uniformFixedVelocity;
-        uniformValue    (0 0 0.1);
+        uniformValue    (0 0 0);
     }
 }
 

@@ -55,6 +55,7 @@ SourceFiles
 #include "fvMesh.H"
 #include "dimensionedTypes.H"
 #include <vector>
+#include "uniformFixedVelocityFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -74,7 +75,7 @@ protected:
 
   // dimensionedVector g0_;
 
-  std::vector<label> patchIDs;
+  std::vector<uniformFixedVelocityFvPatchField*> registeredPatches;
 
 private:
   // Private Member Functions
@@ -97,7 +98,8 @@ public:
   // Member Functions
   //
 
-  virtual void correctBoundaryVelocity(volVectorField& U);
+  void registerVelocity(volVectorField& U); 
+  void correctBoundaryVelocity(volVectorField& U) const; 
 
   //- Source term to momentum equation
   // virtual void addSup(fvMatrix<vector> &eqn, const label fieldi);

@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
     #include "createTimeControls.H"
     #include "createFields.H"
     translationalFrame frameOfReference(mesh);
+    frameOfReference.registerVelocity(U);
     #include "createFvOptions.H"
     #include "initContinuityErrs.H"
 
