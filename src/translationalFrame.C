@@ -26,24 +26,36 @@ License
 #include "translationalFrame.H"
 #include "fvCFD.H"
 #include "geometricOneField.H"
+#include "wordReList.H"
 
+
+Foam::wordList createFileNames()
+{
+    DynamicList<word> names;
+    names.append("velocity");
+    names.append("acceleration");
+    return names;
+}
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
+//
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
 Foam::translationalFrame::translationalFrame(const fvMesh &mesh)
-    : dict_(IOobject("STFProperties",
+    : functionObjectFile(mesh, "frame", createFileNames()),
+      dict_(IOobject("STFProperties",
                      mesh.time().constant(),
                      mesh,
                      IOobject::MUST_READ_IF_MODIFIED,
                      IOobject::NO_WRITE)),
       mesh_(mesh), VF_(vector::zero), aF_(vector::zero),
+      log_(dict_.lookupOrDefault<Switch>("log", false)),
       UName_(dict_.lookupOrDefault<word>("UName", "U")),
       sphereI_(mesh_.boundaryMesh().findPatchID("sphere")),
       mass_(readScalar(dict_.lookup("mass"))),
-      apparentMass_(readScalar(dict_.lookup("apparentMass")))
-{
-    // Registering BCs
+      apparentMass_(readScalar(dict_.lookup("apparentMass"))) {
+
+    createFiles();
 }
 
 void Foam::translationalFrame::registerVelocity(volVectorField &U) {
@@ -64,7 +76,7 @@ void Foam::translationalFrame::registerVelocity(volVectorField &U) {
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 void Foam::translationalFrame::correctBoundaryVelocity(
-    volVectorField& U) const {
+    volVectorField &U) const {
 
     for (auto patch : registeredPatches) {
         patch->correct(VF_);
@@ -83,14 +95,20 @@ void Foam::translationalFrame::update(const volScalarField &p,
     vector gravity(0, 0, -9.81);
 
     vector F_net = pressure + viscous + apparentMass_ * gravity;
-    F_net.y() = 0;
-    F_net.x() = 0;
     aF_ = F_net / mass_;
 
     VF_ += (mesh_.time().deltaTValue() * aF_);
-    Info << "Pressure: " << pressure << "\nViscous: " << viscous
-         << "\nMass: " << apparentMass_ * gravity << "\nVelocity: " << VF_
-         << endl;
+    Info << "Updating frame motion\nPressure: " << pressure
+         << "\nViscous: " << viscous << "\nMass: " << apparentMass_ * gravity
+         << "\nVelocity: " << VF_ << "\nAcceleration: " << aF_ << endl;
+    if (log_) {
+        file(0) << mesh_.time().timeOutputValue() << setw(1) << " " << VF_.x()
+                << setw(1) << " " << VF_.y() << setw(1) << " " << VF_.z() 
+                << setw(1) << endl; ;
+        file(1) << mesh_.time().timeOutputValue() << setw(1) << " " << aF_.x()
+                << setw(1) << " " << aF_.y() << setw(1) << " " << aF_.z()
+                << setw(1) << endl;
+    }
 }
 
 // ************************************************************************* //

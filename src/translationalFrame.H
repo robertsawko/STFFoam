@@ -52,8 +52,10 @@ SourceFiles
 #ifndef translationalFrame_H
 #define translationalFrame_H
 
+#include "functionObjectFile.H"
 #include "fvMesh.H"
 #include "dimensionedTypes.H"
+#include "Switch.H"
 #include <vector>
 #include "uniformFixedVelocityFvPatchField.H"
 
@@ -65,7 +67,7 @@ namespace Foam
                           Class translationalFrame Declaration
 \*---------------------------------------------------------------------------*/
 
-class translationalFrame {
+class translationalFrame : public functionObjectFile {
   private:
     // Private Member Functions
 
@@ -78,6 +80,7 @@ class translationalFrame {
     const fvMesh &mesh_;
     vector VF_;
     vector aF_;
+    Switch log_;
     word UName_;
 
     //- The ID of the patch identifying the front
