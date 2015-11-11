@@ -47,7 +47,7 @@ flags = [
     '-Wno-unused-parameter',
     '-Wold-style-cast',
     '-Wnon-virtual-dtor',
-    '-Wno-unused-variable'
+    '-Wno-unused-variable',
     # '-DNDEBUG',
     # '-DUSE_CLANG_COMPLETER',
     # THIS IS IMPORTANT! Without a "-std=<something>" flag, clang won't know
@@ -72,7 +72,7 @@ flags = [
     '-I./src/',
     '-I.',
     '-I' + foam_src + '/OSspecific/POSIX/lnInclude',
-    '-include ' + foam_src + '/OpenFOAM/lnInclude/Vector.H'
+    '-include ' + foam_src + '/OpenFOAM/lnInclude/Vector.H',
     '-include ' + foam_src + '/finiteVolume/lnInclude/volFieldsFwd.H'
 ]
 
