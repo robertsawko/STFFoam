@@ -4,13 +4,11 @@ An equivalent of MFR for translational frames for OpenFOAM solvers.
 
  * At the moment instrumentation of solvers is necessary
 
-
 ## Compilation
 
-If you are using Using GNU g++ should work fine by 
-
-
+Using GNU g++ should work fine by 
 ```bash
+# Load OpenFOAM environement e.g.
 cd <source>
 mkdir build #for out of source build
 cd build
@@ -32,9 +30,20 @@ make
 
 ## Solver instrumentation
 
+Create the translational frame e.g.
+
 ```cpp
 translationalFrame frameOfReference;
 
 // This is in order to force the BC change on fixed boundaries
 frameOfReference.registerVelocity(U); 
 ```
+
+Update the translational frame somewhere in the time or steady state convergence
+loop.Pressure field and the deviator of the stress tensor have to be passed into
+the function.
+
+```cpp
+frameOfReference.update(p, turbulence->devReff());
+```
+
