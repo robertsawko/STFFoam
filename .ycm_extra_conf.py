@@ -48,6 +48,7 @@ flags = [
     '-Wold-style-cast',
     '-Wnon-virtual-dtor',
     '-Wno-unused-variable',
+    '-DNoRepository',
     # '-DNDEBUG',
     # '-DUSE_CLANG_COMPLETER',
     # THIS IS IMPORTANT! Without a "-std=<something>" flag, clang won't know
