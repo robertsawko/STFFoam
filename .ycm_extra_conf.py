@@ -40,6 +40,7 @@ flags = [
     '-Dlinux64',
     '-DWM_ARCH_OPTION=64',
     '-DWM_DP',
+    '-DNoRepository',
     '-DWM_LABEL_SIZE=32', '-std=c++11',
     '-Wno-unused-local-typedefs',
     '-Wall',
@@ -48,7 +49,6 @@ flags = [
     '-Wold-style-cast',
     '-Wnon-virtual-dtor',
     '-Wno-unused-variable',
-    '-DNoRepository',
     # '-DNDEBUG',
     # '-DUSE_CLANG_COMPLETER',
     # THIS IS IMPORTANT! Without a "-std=<something>" flag, clang won't know
