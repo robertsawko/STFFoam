@@ -72,9 +72,7 @@ flags = [
     '-I' + foam_src + '/OpenFOAM/lnInclude',
     '-I./src/',
     '-I.',
-    '-I' + foam_src + '/OSspecific/POSIX/lnInclude',
-    '-include ' + foam_src + '/OpenFOAM/lnInclude/Vector.H',
-    '-include ' + foam_src + '/finiteVolume/lnInclude/volFieldsFwd.H'
+    '-I' + foam_src + '/OSspecific/POSIX/lnInclude'
 ]
 
 # Set this to the absolute path to the folder (NOT the file!) containing the
@@ -95,19 +93,19 @@ def DirectoryOfThisScript():
   return os.path.dirname( os.path.abspath( __file__ ) )
 
 
-def MakeRelativePathsInFlagsAbsolute( flags, working_directory ):
+def MakeRelativePathsInFlagsAbsolute(flags, working_directory):
   if not working_directory:
-    return list( flags )
+    return list(flags)
   new_flags = []
   make_next_absolute = False
-  path_flags = [ '-isystem', '-I', '-iquote', '--sysroot=' ]
+  path_flags = ['-isystem', '-I', '-iquote', '--sysroot=']
   for flag in flags:
     new_flag = flag
 
     if make_next_absolute:
       make_next_absolute = False
-      if not flag.startswith( '/' ):
-        new_flag = os.path.join( working_directory, flag )
+      if not flag.startswith('/'):
+        new_flag = os.path.join(working_directory, flag)
 
     for path_flag in path_flags:
       if flag == path_flag:
@@ -124,7 +122,7 @@ def MakeRelativePathsInFlagsAbsolute( flags, working_directory ):
   return new_flags
 
 
-def FlagsForFile( filename ):
+def FlagsForFile(filename):
   if database:
     # Bear in mind that compilation_info.compiler_flags_ does NOT return a
     # python list, but a "list-like" StringVec object
