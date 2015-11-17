@@ -101,7 +101,7 @@ void Foam::translationalFrame::update(const volScalarField &p,
     Info << "Updating frame motion\nPressure: " << pressure
          << "\nViscous: " << viscous << "\nMass: " << apparentMass_ * gravity
          << "\nVelocity: " << VF_ << "\nAcceleration: " << aF_ << endl;
-    if (log_) {
+    if (log_ && Pstream::master()) {
         file(0) << mesh_.time().timeOutputValue() << setw(1) << " " << VF_.x()
                 << setw(1) << " " << VF_.y() << setw(1) << " " << VF_.z() 
                 << setw(1) << endl; ;
