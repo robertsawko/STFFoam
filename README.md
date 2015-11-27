@@ -8,7 +8,7 @@ An equivalent of MFR for translational frames for OpenFOAM solvers.
 
 Using GNU g++ should work fine by 
 ```bash
-# Load OpenFOAM environement e.g.
+# Load OpenFOAM environement
 cd <source>
 mkdir build #for out of source build
 cd build
@@ -40,8 +40,8 @@ frameOfReference.registerVelocity(U);
 ```
 
 Update the translational frame somewhere in the time or steady state convergence
-loop.Pressure field and the deviator of the stress tensor have to be passed into
-the function.
+loop. Pressure field and the deviator of the stress tensor have to be passed
+into the function.
 
 ```cpp
 frameOfReference.update(p, turbulence->devReff());
