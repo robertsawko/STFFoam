@@ -83,8 +83,9 @@ void Foam::translationalFrame::correctBoundaryVelocity(
     }
 }
 
-void Foam::translationalFrame::update(const volScalarField &p,
-                                      const volSymmTensorField &R) {
+vector
+Foam::translationalFrame::calculate_acceleration(const volScalarField &p,
+                                                 const volSymmTensorField &R) {
 
     vector pressure = gSum(mesh_.Sf().boundaryField()[sphereI_] *
                            p.boundaryField()[sphereI_]);
@@ -94,17 +95,20 @@ void Foam::translationalFrame::update(const volScalarField &p,
 
     vector gravity(0, 0, -9.81);
 
-    vector F_net = pressure + viscous + apparentMass_ * gravity;
-    aF_ = F_net / mass_;
+    return (pressure + viscous + apparentMass_ * gravity) / mass_;
+}
 
+void Foam::translationalFrame::update(const volScalarField &p,
+                                      const volSymmTensorField &R) {
+
+    aF_ = calculate_acceleration(p, R);
     VF_ += (mesh_.time().deltaTValue() * aF_);
-    Info << "Updating frame motion\nPressure: " << pressure
-         << "\nViscous: " << viscous << "\nMass: " << apparentMass_ * gravity
-         << "\nVelocity: " << VF_ << "\nAcceleration: " << aF_ << endl;
+
     if (log_ && Pstream::master()) {
         file(0) << mesh_.time().timeOutputValue() << setw(1) << " " << VF_.x()
-                << setw(1) << " " << VF_.y() << setw(1) << " " << VF_.z() 
-                << setw(1) << endl; ;
+                << setw(1) << " " << VF_.y() << setw(1) << " " << VF_.z()
+                << setw(1) << endl;
+        ;
         file(1) << mesh_.time().timeOutputValue() << setw(1) << " " << aF_.x()
                 << setw(1) << " " << aF_.y() << setw(1) << " " << aF_.z()
                 << setw(1) << endl;

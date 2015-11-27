@@ -61,8 +61,7 @@ SourceFiles
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-namespace Foam
-{
+namespace Foam {
 /*---------------------------------------------------------------------------*\
                           Class translationalFrame Declaration
 \*---------------------------------------------------------------------------*/
@@ -89,6 +88,9 @@ class translationalFrame : public functionObjectFile {
     scalar apparentMass_;
 
     std::vector<uniformFixedVelocityFvPatchField *> registeredPatches;
+
+    vector calculate_acceleration(const volScalarField &,
+                                  const volSymmTensorField &);
 
   public:
     translationalFrame(const fvMesh &mesh);
