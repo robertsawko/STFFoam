@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::translationalFrame
+    Foam::fv::fallingObject
 
 Description
     Solid-body 6-DoF acceleration source
@@ -33,10 +33,10 @@ Description
     \verbatim
     SBM
     {
-        type            translationalFrame;
+        type            fallingObject;
         active          yes;
 
-        translationalFrameCoeffs
+        fallingObjectCoeffs
         {
             timeDataFileName "constant/acceleration-terms.dat";
         }
@@ -45,12 +45,12 @@ Description
 
 
 SourceFiles
-    translationalFrame.C
+    fallingObject.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef translationalFrame_H
-#define translationalFrame_H
+#ifndef fallingObject_H
+#define fallingObject_H
 
 #include "functionObjectFile.H"
 #include "fvMesh.H"
@@ -63,18 +63,18 @@ SourceFiles
 
 namespace Foam {
 /*---------------------------------------------------------------------------*\
-                          Class translationalFrame Declaration
+                          Class fallingObject Declaration
 \*---------------------------------------------------------------------------*/
 
-class translationalFrame : public functionObjectFile {
+class fallingObject : public functionObjectFile {
   private:
+    // Private Member Functions
+
     //- Disallow default bitwise copy construct
-    translationalFrame(const translationalFrame &);
+    fallingObject(const fallingObject &);
 
     //- Disallow default bitwise assignment
-    void operator=(const translationalFrame &);
-
-  protected:
+    void operator=(const fallingObject &);
     IOdictionary dict_;
     const fvMesh &mesh_;
     vector VF_;
@@ -93,9 +93,9 @@ class translationalFrame : public functionObjectFile {
                                   const volSymmTensorField &);
 
   public:
-    translationalFrame(const fvMesh &mesh);
+    fallingObject(const fvMesh &mesh);
 
-    virtual ~translationalFrame() {}
+    virtual ~fallingObject() {}
 
     void registerVelocity(volVectorField &U);
     void correctBoundaryVelocity(volVectorField &U) const;
