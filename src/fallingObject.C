@@ -53,10 +53,7 @@ Foam::fallingObject::fallingObject(const fvMesh &mesh, const IOdictionary &dict)
           dict_.subDict(typeName + "Coeffs").lookup("objectName"))),
       mass_(readScalar(dict_.subDict(typeName + "Coeffs").lookup("mass"))),
       apparentMass_(readScalar(
-          dict_.subDict(typeName + "Coeffs").lookup("apparentMass"))) {
-
-    createFiles();
-}
+          dict_.subDict(typeName + "Coeffs").lookup("apparentMass"))) {}
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 

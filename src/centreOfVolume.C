@@ -23,23 +23,17 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "centreOfVolumea.H"
+#include "centreOfVolume.H"
 #include "fvCFD.H"
 #include "geometricOneField.H"
 #include "wordReList.H"
 
 #include "addToRunTimeSelectionTable.H"
 
-namespace Foam
-{
-defineTypeNameAndDebug(centreOfVolumea, 0);
+namespace Foam {
+defineTypeNameAndDebug(centreOfVolume, 0);
 
-addToRunTimeSelectionTable
-(
-    translationalFrame,
-    centreOfVolumea,
-    dictionary
-);
+addToRunTimeSelectionTable(translationalFrame, centreOfVolume, dictionary);
 }
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -47,22 +41,20 @@ addToRunTimeSelectionTable
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::centreOfVolumea::fallingObject(const fvMesh &mesh, const IOdictionary &dict)
+Foam::centreOfVolume::centreOfVolume(const fvMesh &mesh,
+                                     const IOdictionary &dict)
     : translationalFrame(mesh, dict),
-      sphereI_(mesh_.boundaryMesh().findPatchID(
-          dict_.subDict(typeName + "Coeffs").lookup("objectName"))),
-      mass_(readScalar(dict_.subDict(typeName + "Coeffs").lookup("mass"))),
-      apparentMass_(readScalar(
-          dict_.subDict(typeName + "Coeffs").lookup("apparentMass"))) {
-
-    createFiles();
+      alpha_(mesh_.lookupObject<volScalarField>("alpha.air")),
+      x0_("xdf",
+          fvc::domainIntegrate(alpha_ * mesh_.C()) /
+              fvc::domainIntegrate(alpha_)) {
 }
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 vector
-Foam::centreOfVolumea::calculate_acceleration(const volScalarField &p,
-                                            const volSymmTensorField &R) {
+Foam::centreOfVolume::calculate_acceleration(const volScalarField &p,
+                                             const volSymmTensorField &R) {
 
     vector pressure = gSum(mesh_.Sf().boundaryField()[sphereI_] *
                            p.boundaryField()[sphereI_]);
@@ -75,8 +67,8 @@ Foam::centreOfVolumea::calculate_acceleration(const volScalarField &p,
     return (pressure + viscous + apparentMass_ * gravity) / mass_;
 }
 
-void Foam::centreOfVolumea::update(const volScalarField &p,
-                                 const volSymmTensorField &R) {
+void Foam::centreOfVolume::update(const volScalarField &p,
+                                  const volSymmTensorField &R) {
 
     aF_ = calculate_acceleration(p, R);
     VF_ += (mesh_.time().deltaTValue() * aF_);

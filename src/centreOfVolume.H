@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::centreOfVolumea
+    Foam::fv::centreOfVolume
 
 Description
     Object moving under the action of gravity and surrounding fluid.
@@ -33,9 +33,9 @@ Description
     \verbatim
     modelType ; 
 
-    translationModel centreOfVolumea;
+    translationModel centreOfVolume;
 
-    centreOfVolumeaCoeffs 
+    centreOfVolumeCoeffs 
     {
         mass 0.62;
         apparentMass 0.0961;
@@ -45,12 +45,12 @@ Description
 
 
 SourceFiles
-    centreOfVolumea.C
+    centreOfVolume.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef centreOfVolumea_H
-#define centreOfVolumea_H
+#ifndef centreOfVolume_H
+#define centreOfVolume_H
 
 #include "translationalFrame.H"
 
@@ -58,33 +58,32 @@ SourceFiles
 
 namespace Foam {
 /*---------------------------------------------------------------------------*\
-                          Class centreOfVolumea Declaration
+                          Class centreOfVolume Declaration
 \*---------------------------------------------------------------------------*/
 
-class centreOfVolumea : public translationalFrame {
+class centreOfVolume : public translationalFrame {
   private:
     // Private Member Functions
 
     //- Disallow default bitwise copy construct
-    centreOfVolumea(const fallingObject &);
+    centreOfVolume(const fallingObject &);
 
     //- Disallow default bitwise assignment
-    void operator=(const centreOfVolumea &);
+    void operator=(const centreOfVolume &);
 
     //- The ID of the patch identifying the front
-    label sphereI_;
-    scalar mass_;
-    scalar apparentMass_;
+    const volScalarField &alpha_;
+    const dimensionedVector x0_;
 
     virtual vector calculate_acceleration(const volScalarField &,
                                   const volSymmTensorField &);
 
   public:
-    TypeName("centreOfVolumea");
+    TypeName("centreOfVolume");
 
-    centreOfVolumea(const fvMesh &, const IOdictionary &);
+    centreOfVolume(const fvMesh &, const IOdictionary &);
 
-    virtual ~centreOfVolumea() {}
+    virtual ~centreOfVolume() {}
 
     virtual void update(const volScalarField &p, const volSymmTensorField &R);
 };
