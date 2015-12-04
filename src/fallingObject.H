@@ -25,21 +25,21 @@ Class
     Foam::fv::fallingObject
 
 Description
-    Solid-body 6-DoF acceleration source
+    Object moving under the action of gravity and surrounding fluid.
 
     \heading Source usage
 
     Example usage:
     \verbatim
-    SBM
-    {
-        type            fallingObject;
-        active          yes;
+    modelType ; 
 
-        fallingObjectCoeffs
-        {
-            timeDataFileName "constant/acceleration-terms.dat";
-        }
+    translationModel fallingObject;
+
+    fallingObjectCoeffs 
+    {
+        mass 0.62;
+        apparentMass 0.0961;
+        objectName sphere;
     }
     \endverbatim
 

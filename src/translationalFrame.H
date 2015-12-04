@@ -25,23 +25,9 @@ Class
     Foam::fv::translationalFrame
 
 Description
-    Solid-body 6-DoF acceleration source
-
-    \heading Source usage
-
-    Example usage:
-    \verbatim
-    SBM
-    {
-        type            translationalFrame;
-        active          yes;
-
-        translationalFrameCoeffs
-        {
-            timeDataFileName "constant/acceleration-terms.dat";
-        }
-    }
-    \endverbatim
+    Non-inertial frame supporting non-uniform acceleration. The type of
+    acceleration can be specified via a motion model. Configured through
+    constant/STFProperties
 
 
 SourceFiles
