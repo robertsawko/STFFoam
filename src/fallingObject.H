@@ -76,7 +76,7 @@ class fallingObject : public translationalFrame {
     scalar mass_;
     scalar apparentMass_;
 
-    vector calculate_acceleration(const volScalarField &,
+    virtual vector calculate_acceleration(const volScalarField &,
                                   const volSymmTensorField &);
 
   public:

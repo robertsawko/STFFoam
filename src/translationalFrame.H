@@ -92,8 +92,8 @@ class translationalFrame : public functionObjectFile {
 
     std::vector<uniformFixedVelocityFvPatchField *> registeredPatches;
 
-    vector calculate_acceleration(const volScalarField &,
-                                  const volSymmTensorField &);
+    virtual vector calculate_acceleration(const volScalarField &,
+                                  const volSymmTensorField &) = 0;
 
   public:
     TypeName("translationalFrame");

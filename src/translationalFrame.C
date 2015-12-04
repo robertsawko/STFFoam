@@ -49,10 +49,7 @@ Foam::translationalFrame::translationalFrame(const fvMesh &mesh,
     : functionObjectFile(mesh, "frame", createFileNames()), dict_(dict),
       mesh_(mesh), VF_(vector::zero), aF_(vector::zero),
       log_(dict_.lookupOrDefault<Switch>("log", false)),
-      UName_(dict_.lookupOrDefault<word>("UName", "U")),
-      sphereI_(mesh_.boundaryMesh().findPatchID("sphere")),
-      mass_(readScalar(dict_.lookup("mass"))),
-      apparentMass_(readScalar(dict_.lookup("apparentMass"))) {
+      UName_(dict_.lookupOrDefault<word>("UName", "U")) {
 
     createFiles();
 }
@@ -108,21 +105,6 @@ void Foam::translationalFrame::correctBoundaryVelocity(
     for (auto patch : registeredPatches) {
         patch->correct(VF_);
     }
-}
-
-vector
-Foam::translationalFrame::calculate_acceleration(const volScalarField &p,
-                                                 const volSymmTensorField &R) {
-
-    vector pressure = gSum(mesh_.Sf().boundaryField()[sphereI_] *
-                           p.boundaryField()[sphereI_]);
-
-    vector viscous = gSum(mesh_.Sf().boundaryField()[sphereI_] &
-                          R.boundaryField()[sphereI_]);
-
-    vector gravity(0, 0, -9.81);
-
-    return (pressure + viscous + apparentMass_ * gravity) / mass_;
 }
 
 void Foam::translationalFrame::update(const volScalarField &p,
