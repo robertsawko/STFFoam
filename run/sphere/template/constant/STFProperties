@@ -15,10 +15,16 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-velocity (0 0 0);
 UName U;
-mass 0.62;
-apparentMass 0.0961;
 log on;
+
+translationModel fallingObject;
+
+fallingObjectCoeffs
+{
+    mass 0.62;
+    apparentMass 0.0961;
+    objectName sphere;
+}
 
 // ************************************************************************* //

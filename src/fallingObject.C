@@ -49,9 +49,11 @@ addToRunTimeSelectionTable
 
 Foam::fallingObject::fallingObject(const fvMesh &mesh, const IOdictionary &dict)
     : translationalFrame(mesh, dict),
-      sphereI_(mesh_.boundaryMesh().findPatchID("sphere")),
-      mass_(readScalar(dict_.lookup("mass"))),
-      apparentMass_(readScalar(dict_.lookup("apparentMass"))) {
+      sphereI_(mesh_.boundaryMesh().findPatchID(
+          dict_.subDict(typeName + "Coeffs").lookup("objectName"))),
+      mass_(readScalar(dict_.subDict(typeName + "Coeffs").lookup("mass"))),
+      apparentMass_(readScalar(
+          dict_.subDict(typeName + "Coeffs").lookup("apparentMass"))) {
 
     createFiles();
 }
@@ -60,7 +62,7 @@ Foam::fallingObject::fallingObject(const fvMesh &mesh, const IOdictionary &dict)
 
 vector
 Foam::fallingObject::calculate_acceleration(const volScalarField &p,
-                                                 const volSymmTensorField &R) {
+                                            const volSymmTensorField &R) {
 
     vector pressure = gSum(mesh_.Sf().boundaryField()[sphereI_] *
                            p.boundaryField()[sphereI_]);
@@ -74,7 +76,7 @@ Foam::fallingObject::calculate_acceleration(const volScalarField &p,
 }
 
 void Foam::fallingObject::update(const volScalarField &p,
-                                      const volSymmTensorField &R) {
+                                 const volSymmTensorField &R) {
 
     aF_ = calculate_acceleration(p, R);
     VF_ += (mesh_.time().deltaTValue() * aF_);
