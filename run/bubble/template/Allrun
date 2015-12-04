@@ -1,0 +1,32 @@
+#/bin/bash
+#Script to run case 1.
+#
+#1. Create a standard block mesh with blockMesh
+#2. Create a refinement area with snappyHexMesh
+#3. Initialise the domain with funkySetFileds
+#4. Run the solver.
+
+#1. Create a standard block mesh
+blockMesh 2>&1 |tee log.blockMesh
+#2'. Delete snappyHexMesh generated files from previous runs
+rm constant/polyMesh/cellLevel
+rm constant/polyMesh/cellZones
+rm constant/polyMesh/faceZones
+rm constant/polyMesh/pointLevel
+rm constant/polyMesh/pointZones
+rm constant/polyMesh/refinementHistory
+rm constant/polyMesh/surfaceIndex
+#2''. Because snappyHexMesh crashes.
+cp system/decomposeParDict.sHM system/decomposeParDict
+#3. Create a refinement area with snappyHexMesh
+snappyHexMesh -overwrite 2>&1 |tee log.snappyHexMesh
+cp system/decomposeParDict.std system/decomposeParDict
+#4. Initialise the domain with funkySetFileds
+rm -r 0
+cp -r 0.org 0
+funkySetFields -latestTime 2>&1 |tee log.funkySetFileds
+
+#4. Run the solver.
+TFRInterFoam 2>&1 |tee log.TFRInterFoam
+
+cd ../
