@@ -33,7 +33,9 @@ make
 Create the translational frame e.g.
 
 ```cpp
-translationalFrame frameOfReference;
+autoPtr<translationalFrame> frameOfReference (
+    translationalFrame::New(mesh)
+);
 
 // This is in order to force the BC change on fixed boundaries
 frameOfReference.registerVelocity(U); 
