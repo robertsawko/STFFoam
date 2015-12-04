@@ -73,7 +73,12 @@ class centreOfVolume : public translationalFrame {
 
     //- The ID of the patch identifying the front
     const volScalarField &alpha_;
-    const dimensionedVector x0_;
+
+    const dimensionedVector xinit_;
+    dimensionedVector xold_;
+
+    const scalar lambdaF_;
+    const scalar lambdad_;
 
     virtual vector calculate_acceleration(const volScalarField &,
                                   const volSymmTensorField &);
@@ -84,8 +89,6 @@ class centreOfVolume : public translationalFrame {
     centreOfVolume(const fvMesh &, const IOdictionary &);
 
     virtual ~centreOfVolume() {}
-
-    virtual void update(const volScalarField &p, const volSymmTensorField &R);
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

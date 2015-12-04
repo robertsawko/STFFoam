@@ -85,8 +85,6 @@ class fallingObject : public translationalFrame {
     fallingObject(const fvMesh &, const IOdictionary &);
 
     virtual ~fallingObject() {}
-
-    virtual void update(const volScalarField &p, const volSymmTensorField &R);
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

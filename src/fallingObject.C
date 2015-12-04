@@ -72,21 +72,4 @@ Foam::fallingObject::calculate_acceleration(const volScalarField &p,
     return (pressure + viscous + apparentMass_ * gravity) / mass_;
 }
 
-void Foam::fallingObject::update(const volScalarField &p,
-                                 const volSymmTensorField &R) {
-
-    aF_ = calculate_acceleration(p, R);
-    VF_ += (mesh_.time().deltaTValue() * aF_);
-
-    if (log_ && Pstream::master()) {
-        file(0) << mesh_.time().timeOutputValue() << setw(1) << " " << VF_.x()
-                << setw(1) << " " << VF_.y() << setw(1) << " " << VF_.z()
-                << setw(1) << endl;
-        ;
-        file(1) << mesh_.time().timeOutputValue() << setw(1) << " " << aF_.x()
-                << setw(1) << " " << aF_.y() << setw(1) << " " << aF_.z()
-                << setw(1) << endl;
-    }
-}
-
 // ************************************************************************* //

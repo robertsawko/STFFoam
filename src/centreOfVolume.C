@@ -45,43 +45,36 @@ Foam::centreOfVolume::centreOfVolume(const fvMesh &mesh,
                                      const IOdictionary &dict)
     : translationalFrame(mesh, dict),
       alpha_(mesh_.lookupObject<volScalarField>("alpha.air")),
-      x0_("xdf",
-          fvc::domainIntegrate(alpha_ * mesh_.C()) /
-              fvc::domainIntegrate(alpha_)) {
-}
+      xinit_("x_0",
+             fvc::domainIntegrate(alpha_ * mesh_.C()) /
+                 fvc::domainIntegrate(alpha_)),
+      xold_("x_o", xinit_),
+      lambdaF_(
+          readScalar(dict_.subDict(typeName + "Coeffs").lookup("lambdaF"))),
+      lambdad_(
+          readScalar(dict_.subDict(typeName + "Coeffs").lookup("lambdad"))) {}
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
 
 vector
 Foam::centreOfVolume::calculate_acceleration(const volScalarField &p,
                                              const volSymmTensorField &R) {
+    const Time& t = mesh_.time();
 
-    vector pressure = gSum(mesh_.Sf().boundaryField()[sphereI_] *
-                           p.boundaryField()[sphereI_]);
+    dimensionedVector xcurrent(
+        "xd",
+        fvc::domainIntegrate(alpha_ * mesh_.C()) // centre of mass
+            /
+            fvc::domainIntegrate(alpha_));
 
-    vector viscous = gSum(mesh_.Sf().boundaryField()[sphereI_] &
-                          R.boundaryField()[sphereI_]);
+    // Velocity difference (Rusche approach)
+    dimensionedVector DeltaV("DeltaV",
+                             (lambdaF_ * (xinit_ - xcurrent)) / t.deltaT() -
+                                 lambdad_ * (xcurrent - xold_) / t.deltaT());
 
-    vector gravity(0, 0, -9.81);
+    xold_.value() = xcurrent.value();
 
-    return (pressure + viscous + apparentMass_ * gravity) / mass_;
-}
-
-void Foam::centreOfVolume::update(const volScalarField &p,
-                                  const volSymmTensorField &R) {
-
-    aF_ = calculate_acceleration(p, R);
-    VF_ += (mesh_.time().deltaTValue() * aF_);
-
-    if (log_ && Pstream::master()) {
-        file(0) << mesh_.time().timeOutputValue() << setw(1) << " " << VF_.x()
-                << setw(1) << " " << VF_.y() << setw(1) << " " << VF_.z()
-                << setw(1) << endl;
-        ;
-        file(1) << mesh_.time().timeOutputValue() << setw(1) << " " << aF_.x()
-                << setw(1) << " " << aF_.y() << setw(1) << " " << aF_.z()
-                << setw(1) << endl;
-    }
+    return -(DeltaV / t.deltaT()).value();
 }
 
 // ************************************************************************* //
