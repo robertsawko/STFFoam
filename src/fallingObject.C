@@ -28,29 +28,27 @@ License
 #include "geometricOneField.H"
 #include "wordReList.H"
 
+#include "addToRunTimeSelectionTable.H"
 
-Foam::wordList createFileNames()
+namespace Foam
 {
-    DynamicList<word> names;
-    names.append("velocity");
-    names.append("acceleration");
-    return names;
+defineTypeNameAndDebug(fallingObject, 0);
+
+addToRunTimeSelectionTable
+(
+    translationalFrame,
+    fallingObject,
+    dictionary
+);
 }
+
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
 //
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::fallingObject::fallingObject(const fvMesh &mesh)
-    : functionObjectFile(mesh, "frame", createFileNames()),
-      dict_(IOobject("STFProperties",
-                     mesh.time().constant(),
-                     mesh,
-                     IOobject::MUST_READ_IF_MODIFIED,
-                     IOobject::NO_WRITE)),
-      mesh_(mesh), VF_(vector::zero), aF_(vector::zero),
-      log_(dict_.lookupOrDefault<Switch>("log", false)),
-      UName_(dict_.lookupOrDefault<word>("UName", "U")),
+Foam::fallingObject::fallingObject(const fvMesh &mesh, const IOdictionary &dict)
+    : translationalFrame(mesh, dict),
       sphereI_(mesh_.boundaryMesh().findPatchID("sphere")),
       mass_(readScalar(dict_.lookup("mass"))),
       apparentMass_(readScalar(dict_.lookup("apparentMass"))) {
@@ -58,30 +56,7 @@ Foam::fallingObject::fallingObject(const fvMesh &mesh)
     createFiles();
 }
 
-void Foam::fallingObject::registerVelocity(volVectorField &U) {
-    volVectorField::GeometricBoundaryField &patches = U.boundaryField();
-
-    forAll(patches, patchi) {
-        fvPatchVectorField &currPatch = patches[patchi];
-        if (isA<uniformFixedVelocityFvPatchField>(currPatch)) {
-            Info << "Registering: " << currPatch.patch().name() << " patch of "
-                 << UName_ << " field. " << endl;
-            uniformFixedVelocityFvPatchField &p =
-                refCast<uniformFixedVelocityFvPatchField>(currPatch);
-            registeredPatches.push_back(&p);
-        }
-    }
-}
-
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
-
-void Foam::fallingObject::correctBoundaryVelocity(
-    volVectorField &U) const {
-
-    for (auto patch : registeredPatches) {
-        patch->correct(VF_);
-    }
-}
 
 vector
 Foam::fallingObject::calculate_acceleration(const volScalarField &p,

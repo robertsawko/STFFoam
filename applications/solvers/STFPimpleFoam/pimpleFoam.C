@@ -54,8 +54,10 @@ int main(int argc, char *argv[])
 
     #include "createTimeControls.H"
     #include "createFields.H"
-    translationalFrame frameOfReference(mesh);
-    frameOfReference.registerVelocity(U);
+    autoPtr<translationalFrame> frameOfReference (
+        translationalFrame::New(mesh)
+    );
+    frameOfReference->registerVelocity(U);
     #include "createFvOptions.H"
     #include "initContinuityErrs.H"
 
@@ -69,7 +71,7 @@ int main(int argc, char *argv[])
         #include "CourantNo.H"
         #include "setDeltaT.H"
 
-        frameOfReference.update(p, turbulence->devReff());
+        frameOfReference->update(p, turbulence->devReff());
         runTime++;
 
         Info<< "Time = " << runTime.timeName() << nl << endl;

@@ -59,6 +59,9 @@ SourceFiles
 #include <vector>
 #include "uniformFixedVelocityFvPatchField.H"
 
+#include "autoPtr.H"
+#include "runTimeSelectionTables.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam {
@@ -93,7 +96,19 @@ class translationalFrame : public functionObjectFile {
                                   const volSymmTensorField &);
 
   public:
-    translationalFrame(const fvMesh &mesh);
+    TypeName("translationalFrame");
+
+    declareRunTimeSelectionTable(autoPtr,
+                                 translationalFrame,
+                                 dictionary,
+                                 (const fvMesh &mesh, const IOdictionary &dict),
+                                 (mesh, dict));
+
+    // Selector
+    static autoPtr<translationalFrame>
+    New(const fvMesh &mesh);
+    
+    translationalFrame(const fvMesh &, const IOdictionary &);
 
     virtual ~translationalFrame() {}
 

@@ -52,12 +52,7 @@ SourceFiles
 #ifndef fallingObject_H
 #define fallingObject_H
 
-#include "functionObjectFile.H"
-#include "fvMesh.H"
-#include "dimensionedTypes.H"
-#include "Switch.H"
-#include <vector>
-#include "uniformFixedVelocityFvPatchField.H"
+#include "translationalFrame.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -66,7 +61,7 @@ namespace Foam {
                           Class fallingObject Declaration
 \*---------------------------------------------------------------------------*/
 
-class fallingObject : public functionObjectFile {
+class fallingObject : public translationalFrame {
   private:
     // Private Member Functions
 
@@ -75,34 +70,23 @@ class fallingObject : public functionObjectFile {
 
     //- Disallow default bitwise assignment
     void operator=(const fallingObject &);
-    IOdictionary dict_;
-    const fvMesh &mesh_;
-    vector VF_;
-    vector aF_;
-    Switch log_;
-    word UName_;
 
     //- The ID of the patch identifying the front
     label sphereI_;
     scalar mass_;
     scalar apparentMass_;
 
-    std::vector<uniformFixedVelocityFvPatchField *> registeredPatches;
-
     vector calculate_acceleration(const volScalarField &,
                                   const volSymmTensorField &);
 
   public:
-    fallingObject(const fvMesh &mesh);
+    TypeName("fallingObject");
+
+    fallingObject(const fvMesh &, const IOdictionary &);
 
     virtual ~fallingObject() {}
 
-    void registerVelocity(volVectorField &U);
-    void correctBoundaryVelocity(volVectorField &U) const;
-    void update(const volScalarField &p, const volSymmTensorField &R);
-    dimensionedVector aF() const {
-        return dimensionedVector("aF", dimAcceleration, aF_);
-    }
+    virtual void update(const volScalarField &p, const volSymmTensorField &R);
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

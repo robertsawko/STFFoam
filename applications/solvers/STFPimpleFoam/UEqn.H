@@ -1,11 +1,11 @@
 // Solve the Momentum equation
 
-frameOfReference.correctBoundaryVelocity(U);
+frameOfReference->correctBoundaryVelocity(U);
 
 tmp<fvVectorMatrix> UEqn
 (
     fvm::ddt(U) + fvm::div(phi, U)
-  + frameOfReference.aF()
+  + frameOfReference->aF()
   + turbulence->divDevReff(U)
  ==
     fvOptions(U)

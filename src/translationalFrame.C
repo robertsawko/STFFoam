@@ -28,9 +28,12 @@ License
 #include "geometricOneField.H"
 #include "wordReList.H"
 
+namespace Foam {
+defineTypeNameAndDebug(translationalFrame, 0);
+defineRunTimeSelectionTable(translationalFrame, dictionary);
+}
 
-Foam::wordList createFileNames()
-{
+Foam::wordList createFileNames() {
     DynamicList<word> names;
     names.append("velocity");
     names.append("acceleration");
@@ -41,13 +44,9 @@ Foam::wordList createFileNames()
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::translationalFrame::translationalFrame(const fvMesh &mesh)
-    : functionObjectFile(mesh, "frame", createFileNames()),
-      dict_(IOobject("STFProperties",
-                     mesh.time().constant(),
-                     mesh,
-                     IOobject::MUST_READ_IF_MODIFIED,
-                     IOobject::NO_WRITE)),
+Foam::translationalFrame::translationalFrame(const fvMesh &mesh,
+                                             const IOdictionary &dict)
+    : functionObjectFile(mesh, "frame", createFileNames()), dict_(dict),
       mesh_(mesh), VF_(vector::zero), aF_(vector::zero),
       log_(dict_.lookupOrDefault<Switch>("log", false)),
       UName_(dict_.lookupOrDefault<word>("UName", "U")),
@@ -71,6 +70,34 @@ void Foam::translationalFrame::registerVelocity(volVectorField &U) {
             registeredPatches.push_back(&p);
         }
     }
+}
+
+autoPtr<translationalFrame>
+translationalFrame::New(const fvMesh &mesh) {
+    IOdictionary dict = IOdictionary(IOobject("STFProperties",
+                                              mesh.time().constant(),
+                                              mesh,
+                                              IOobject::MUST_READ_IF_MODIFIED,
+                                              IOobject::NO_WRITE));
+
+    const word modelType(dict.lookup("translationModel"));
+
+    Info << "Selecting translational frame: " << modelType << endl;
+
+    dictionaryConstructorTable::iterator cstrIter =
+        dictionaryConstructorTablePtr_->find(modelType);
+
+    if (cstrIter == dictionaryConstructorTablePtr_->end()) {
+        FatalErrorIn("translationalFrame::New"
+                     "("
+                     "const dictionary&"
+                     ")")
+            << "Unknown translation type " << modelType << nl << nl
+            << "Valid translation types:" << endl
+            << dictionaryConstructorTablePtr_->sortedToc() << exit(FatalError);
+    }
+
+    return autoPtr<translationalFrame>(cstrIter()(mesh, dict));
 }
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
