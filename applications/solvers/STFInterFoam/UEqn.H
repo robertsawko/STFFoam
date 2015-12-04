@@ -1,8 +1,10 @@
     MRF.correctBoundaryVelocity(U);
+    frameOfReference->correctBoundaryVelocity(U);
 
     fvVectorMatrix UEqn
     (
         fvm::ddt(rho, U) + fvm::div(rhoPhi, U)
+      + frameOfReference->aF()
       + MRF.DDt(rho, U)
       + turbulence->divDevRhoReff(rho, U)
      ==

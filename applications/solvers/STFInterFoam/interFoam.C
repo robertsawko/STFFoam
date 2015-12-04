@@ -52,6 +52,7 @@ Description
 #include "localEulerDdtScheme.H"
 #include "fvcSmooth.H"
 
+#include "translationalFrame.H"
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
@@ -66,6 +67,10 @@ int main(int argc, char *argv[])
     #include "createRDeltaT.H"
     #include "initContinuityErrs.H"
     #include "createFields.H"
+    autoPtr<translationalFrame> frameOfReference (
+        translationalFrame::New(mesh)
+    );
+    frameOfReference->registerVelocity(U);
     #include "createMRF.H"
     #include "createFvOptions.H"
     #include "correctPhi.H"
@@ -96,6 +101,7 @@ int main(int argc, char *argv[])
             #include "setDeltaT.H"
         }
 
+        frameOfReference->update(p, turbulence->devReff());
         runTime++;
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
