@@ -10,7 +10,7 @@ match OverLength /\%81v.\+/
 "wildignre allows us to ignore some files when searching and opening from
 "within vim
 set wildignore+=*.o,*.obj,lnInclude,linux64GccDPOpt,tags,*.dep,gmon.out,
-                        \doc,*/build/*,*/run/*
+                        \doc,*/build/*,*/run/*,*.swp
 
 let g:ycm_confirm_extra_conf = 0
 "Compilation
