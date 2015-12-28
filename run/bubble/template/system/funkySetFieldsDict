@@ -19,14 +19,14 @@ expressions
 (
 	initZero
 	{
-		field alpha1;
+		field alpha.air;
 		create false;
 		expression "0";
 		keepPatches true ;
 	}
 	setBubble
 	{
-		field alpha1 ;
+		field alpha.air ;
 		expression "1" ;
 		keepPatches true ;
 		condition "mag(pos()-vector(0.007,0.004,0.004))<0.0005" ;
