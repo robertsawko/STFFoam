@@ -30,16 +30,10 @@ License
 
 #include "addToRunTimeSelectionTable.H"
 
-namespace Foam
-{
+namespace Foam {
 defineTypeNameAndDebug(fallingObject, 0);
 
-addToRunTimeSelectionTable
-(
-    translationalFrame,
-    fallingObject,
-    dictionary
-);
+addToRunTimeSelectionTable(translationalFrame, fallingObject, dictionary);
 }
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //

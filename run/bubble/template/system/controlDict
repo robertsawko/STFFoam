@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  1.7.1                                 |
+|  \\    /   O peration     | Version:  3.0.0                                 |
 |   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -15,7 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-application     interFoam;
+application     STFInterFoam;
 
 startFrom       latestTime;
 
@@ -52,8 +52,4 @@ maxAlphaCo      0.2;
 
 maxDeltaT       1;
 
-bisectionTolerance 0.01;
-errorThreshold 0.1;
-pSpec 0;
-pValue 132;
 // ************************************************************************* //
