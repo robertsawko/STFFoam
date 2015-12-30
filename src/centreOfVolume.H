@@ -66,7 +66,7 @@ class centreOfVolume : public translationalFrame {
     // Private Member Functions
 
     //- Disallow default bitwise copy construct
-    centreOfVolume(const fallingObject &);
+    centreOfVolume(const centreOfVolume &);
 
     //- Disallow default bitwise assignment
     void operator=(const centreOfVolume &);

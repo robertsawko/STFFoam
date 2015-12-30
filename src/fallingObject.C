@@ -25,8 +25,6 @@ License
 
 #include "fallingObject.H"
 #include "fvCFD.H"
-#include "geometricOneField.H"
-#include "wordReList.H"
 
 #include "addToRunTimeSelectionTable.H"
 

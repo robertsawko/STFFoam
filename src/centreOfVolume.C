@@ -25,8 +25,6 @@ License
 
 #include "centreOfVolume.H"
 #include "fvCFD.H"
-#include "geometricOneField.H"
-#include "wordReList.H"
 
 #include "addToRunTimeSelectionTable.H"
 
