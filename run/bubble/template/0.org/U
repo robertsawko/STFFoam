@@ -23,7 +23,8 @@ boundaryField
           
     top
     {
-        type            fixedValue;
+        type            uniformFixedVelocity;
+        uniformValue    (0 0 0);
         value           uniform (0 0 0);
     }
     left          
@@ -46,12 +47,12 @@ boundaryField
     back
     {
         type            fixedValue;
-	value		uniform (0 0 0);
+        value		    uniform (0 0 0);
     }
     front
     {
         type            fixedValue;
-	value		uniform (0 0 0);
+        value		    uniform (0 0 0);
     }
 }
 

@@ -15,7 +15,6 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-lambda              lambda [ 0 0 0 0 0 0 0 ] 0.01;
 solvers
 {
     "alpha.air.*"
