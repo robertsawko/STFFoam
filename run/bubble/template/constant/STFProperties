@@ -22,6 +22,8 @@ translationModel centreOfVolume;
 
 centreOfVolumeCoeffs
 {
+    lambdaF 0.1;
+    lambdad 0.1;
 }
 
 // ************************************************************************* //
