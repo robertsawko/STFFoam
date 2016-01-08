@@ -64,6 +64,7 @@ SourceFiles
 #define STFScouringInflowVelocityFvPatchVectorField_H
 
 #include "fixedValueFvPatchFields.H"
+#include "frameAwareBoundary.H"
 #include "DataEntry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -74,12 +75,13 @@ namespace Foam {
                 Class STFScouringInflowVelocityFvPatchVectorField Declaration
 \*---------------------------------------------------------------------------*/
 
-class STFScouringInflowVelocityFvPatchVectorField : public fixedValueFvPatchVectorField {
+class STFScouringInflowVelocityFvPatchVectorField
+    : public fixedValueFvPatchVectorField,
+      public frameAwareBoundary {
     // Private data
 
     autoPtr<DataEntry<scalar>> pipeDiameter_;
     autoPtr<DataEntry<scalar>> depositHeight_;
-    vector translationVelocity_;
 
   public:
     //- Runtime type information
@@ -88,23 +90,26 @@ class STFScouringInflowVelocityFvPatchVectorField : public fixedValueFvPatchVect
     // Constructors
 
     //- Construct from patch and internal field
-    STFScouringInflowVelocityFvPatchVectorField(const fvPatch &,
-                                     const DimensionedField<vector, volMesh> &);
+    STFScouringInflowVelocityFvPatchVectorField(
+        const fvPatch &, const DimensionedField<vector, volMesh> &);
 
     //- Construct from patch, internal field and dictionary
-    STFScouringInflowVelocityFvPatchVectorField(const fvPatch &,
-                                     const DimensionedField<vector, volMesh> &,
-                                     const dictionary &);
+    STFScouringInflowVelocityFvPatchVectorField(
+        const fvPatch &,
+        const DimensionedField<vector, volMesh> &,
+        const dictionary &);
 
     //- Construct by mapping given STFScouringInflowVelocityFvPatchVectorField
     //  onto a new patch
-    STFScouringInflowVelocityFvPatchVectorField(const STFScouringInflowVelocityFvPatchVectorField &,
-                                     const fvPatch &,
-                                     const DimensionedField<vector, volMesh> &,
-                                     const fvPatchFieldMapper &);
+    STFScouringInflowVelocityFvPatchVectorField(
+        const STFScouringInflowVelocityFvPatchVectorField &,
+        const fvPatch &,
+        const DimensionedField<vector, volMesh> &,
+        const fvPatchFieldMapper &);
 
     //- Construct as copy
-    STFScouringInflowVelocityFvPatchVectorField(const STFScouringInflowVelocityFvPatchVectorField &);
+    STFScouringInflowVelocityFvPatchVectorField(
+        const STFScouringInflowVelocityFvPatchVectorField &);
     virtual ~STFScouringInflowVelocityFvPatchVectorField() {}
 
     //- Construct and return a clone
@@ -114,8 +119,9 @@ class STFScouringInflowVelocityFvPatchVectorField : public fixedValueFvPatchVect
     }
 
     //- Construct as copy setting internal field reference
-    STFScouringInflowVelocityFvPatchVectorField(const STFScouringInflowVelocityFvPatchVectorField &,
-                                     const DimensionedField<vector, volMesh> &);
+    STFScouringInflowVelocityFvPatchVectorField(
+        const STFScouringInflowVelocityFvPatchVectorField &,
+        const DimensionedField<vector, volMesh> &);
 
     //- Construct and return a clone setting internal field reference
     virtual tmp<fvPatchVectorField>
@@ -128,8 +134,6 @@ class STFScouringInflowVelocityFvPatchVectorField : public fixedValueFvPatchVect
 
     //- Update the coefficients associated with the patch field
     virtual void updateCoeffs();
-
-    virtual void correct(const vector &VF);
 
     //- Write
     virtual void write(Ostream &) const;

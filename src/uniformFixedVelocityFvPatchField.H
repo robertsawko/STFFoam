@@ -64,6 +64,7 @@ SourceFiles
 #define uniformFixedVelocityFvPatchField_H
 
 #include "fixedValueFvPatchFields.H"
+#include "frameAwareBoundary.H"
 #include "DataEntry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -74,11 +75,11 @@ namespace Foam {
                 Class uniformFixedVelocityFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
-class uniformFixedVelocityFvPatchField : public fixedValueFvPatchVectorField {
+class uniformFixedVelocityFvPatchField : public fixedValueFvPatchVectorField,
+                                         public frameAwareBoundary {
     // Private data
 
     autoPtr<DataEntry<vector>> uniformValue_;
-    vector translationVelocity_;
 
   public:
     //- Runtime type information
@@ -127,8 +128,6 @@ class uniformFixedVelocityFvPatchField : public fixedValueFvPatchVectorField {
 
     //- Update the coefficients associated with the patch field
     virtual void updateCoeffs();
-
-    virtual void correct(const vector &VF);
 
     //- Write
     virtual void write(Ostream &) const;

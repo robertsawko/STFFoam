@@ -32,8 +32,8 @@ License
 Foam::STFScouringInflowVelocityFvPatchVectorField::
     STFScouringInflowVelocityFvPatchVectorField(
         const fvPatch &p, const DimensionedField<vector, volMesh> &iF)
-    : fixedValueFvPatchField<vector>(p, iF), pipeDiameter_(), depositHeight_(),
-      translationVelocity_(vector::zero) {}
+    : fixedValueFvPatchField<vector>(p, iF), pipeDiameter_(), depositHeight_() {
+}
 
 Foam::STFScouringInflowVelocityFvPatchVectorField::
     STFScouringInflowVelocityFvPatchVectorField(
@@ -43,8 +43,7 @@ Foam::STFScouringInflowVelocityFvPatchVectorField::
         const fvPatchFieldMapper &mapper)
     : fixedValueFvPatchField<vector>(p, iF), // bypass mapper
       pipeDiameter_(ptf.pipeDiameter_().clone().ptr()),
-      depositHeight_(ptf.depositHeight_().clone().ptr()),
-      translationVelocity_(ptf.translationVelocity_) {
+      depositHeight_(ptf.depositHeight_().clone().ptr()) {
     // Evaluate since value not mapped
     // const scalar t = this->db().time().timeOutputValue();
     // fvPatchField<vector>::operator==(pipeDiameter_->value(t) -
@@ -58,8 +57,7 @@ Foam::STFScouringInflowVelocityFvPatchVectorField::
         const dictionary &dict)
     : fixedValueFvPatchField<vector>(p, iF),
       pipeDiameter_(DataEntry<scalar>::New("pipeDiameter", dict)),
-      depositHeight_(DataEntry<scalar>::New("depositHeight", dict)),
-      translationVelocity_(vector::zero) {
+      depositHeight_(DataEntry<scalar>::New("depositHeight", dict)) {
     const scalar t = this->db().time().timeOutputValue();
     fvPatchField<vector>::operator=(vectorField("value", dict, p.size()));
 }
@@ -68,13 +66,13 @@ Foam::STFScouringInflowVelocityFvPatchVectorField::
     STFScouringInflowVelocityFvPatchVectorField(
         const STFScouringInflowVelocityFvPatchVectorField &ptf)
     : fixedValueFvPatchField<vector>(ptf),
+      frameAwareBoundary(ptf),
       pipeDiameter_(ptf.pipeDiameter_.valid()
                         ? ptf.pipeDiameter_().clone().ptr()
                         : nullptr),
       depositHeight_(ptf.depositHeight_.valid()
-                        ? ptf.depositHeight_().clone().ptr()
-                        : nullptr),
-      translationVelocity_(ptf.translationVelocity_) {}
+                         ? ptf.depositHeight_().clone().ptr()
+                         : nullptr) {}
 
 Foam::STFScouringInflowVelocityFvPatchVectorField::
     STFScouringInflowVelocityFvPatchVectorField(
@@ -85,9 +83,8 @@ Foam::STFScouringInflowVelocityFvPatchVectorField::
                         ? ptf.pipeDiameter_().clone().ptr()
                         : nullptr),
       depositHeight_(ptf.depositHeight_.valid()
-                        ? ptf.depositHeight_().clone().ptr()
-                        : nullptr),
-      translationVelocity_(ptf.translationVelocity_) {
+                         ? ptf.depositHeight_().clone().ptr()
+                         : nullptr) {
     /*
     // For safety re-evaluate
     const scalar t = this->db().time().timeOutputValue();
@@ -110,7 +107,7 @@ void Foam::STFScouringInflowVelocityFvPatchVectorField::updateCoeffs() {
     using Foam::constant::mathematical::pi;
 
     const scalar avgU =
-        -(pi * mag(translationVelocity_) * depositHeight_->value(t) *
+        -(pi * mag(currentVelocity()) * depositHeight_->value(t) *
           (pipeDiameter_->value(t) - depositHeight_->value(t))) /
         gSum(patch().magSf());
 
@@ -125,18 +122,13 @@ void Foam::STFScouringInflowVelocityFvPatchVectorField::updateCoeffs() {
 void Foam::STFScouringInflowVelocityFvPatchVectorField::write(
     Ostream &os) const {
     fvPatchField<vector>::write(os);
-    if(pipeDiameter_.valid())
+    if (pipeDiameter_.valid())
         pipeDiameter_->writeData(os);
-    if(depositHeight_.valid())
+    if (depositHeight_.valid())
         depositHeight_->writeData(os);
-    os.writeKeyword("translationVelocity") << translationVelocity_
+    os.writeKeyword("translationVelocity") << currentVelocity()
                                            << token::END_STATEMENT << nl;
     writeEntry("value", os);
-}
-
-void Foam::STFScouringInflowVelocityFvPatchVectorField::correct(
-    const vector &VF) {
-    translationVelocity_ = VF;
 }
 
 namespace Foam {

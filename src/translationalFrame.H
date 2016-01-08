@@ -43,7 +43,7 @@ SourceFiles
 #include "dimensionedTypes.H"
 #include "Switch.H"
 #include <vector>
-#include "uniformFixedVelocityFvPatchField.H"
+#include "frameAwareBoundary.H"
 
 #include "autoPtr.H"
 #include "runTimeSelectionTables.H"
@@ -71,7 +71,7 @@ class translationalFrame : public functionObjectFile {
     Switch log_;
     word UName_;
 
-    std::vector<uniformFixedVelocityFvPatchField *> registeredPatches;
+    std::vector<frameAwareBoundary *> registeredPatches;
 
     virtual vector calculate_acceleration(const volScalarField &,
                                   const volSymmTensorField &) = 0;

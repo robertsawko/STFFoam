@@ -30,8 +30,8 @@ License
 
 Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField(
     const fvPatch &p, const DimensionedField<vector, volMesh> &iF)
-    : fixedValueFvPatchField<vector>(p, iF), uniformValue_(),
-      translationVelocity_(vector::zero) {}
+    : fixedValueFvPatchField<vector>(p, iF), frameAwareBoundary(),
+      uniformValue_() {}
 
 Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField(
     const uniformFixedVelocityFvPatchField &ptf,
@@ -39,12 +39,11 @@ Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField(
     const DimensionedField<vector, volMesh> &iF,
     const fvPatchFieldMapper &mapper)
     : fixedValueFvPatchField<vector>(p, iF), // bypass mapper
-      uniformValue_(ptf.uniformValue_().clone().ptr()),
-      translationVelocity_(ptf.translationVelocity_) {
+      uniformValue_(ptf.uniformValue_().clone().ptr()) {
     // Evaluate since value not mapped
     const scalar t = this->db().time().timeOutputValue();
     fvPatchField<vector>::operator==(uniformValue_->value(t) -
-                                     translationVelocity_);
+                                     currentVelocity());
 }
 
 Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField(
@@ -52,28 +51,25 @@ Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField(
     const DimensionedField<vector, volMesh> &iF,
     const dictionary &dict)
     : fixedValueFvPatchField<vector>(p, iF),
-      uniformValue_(DataEntry<vector>::New("uniformValue", dict)),
-      translationVelocity_(vector::zero) {
+      uniformValue_(DataEntry<vector>::New("uniformValue", dict)) {
     const scalar t = this->db().time().timeOutputValue();
     fvPatchField<vector>::operator=(vectorField("value", dict, p.size()));
 }
 
 Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField(
     const uniformFixedVelocityFvPatchField &ptf)
-    : fixedValueFvPatchField<vector>(ptf),
+    : fixedValueFvPatchField<vector>(ptf), frameAwareBoundary(ptf),
       uniformValue_(ptf.uniformValue_.valid()
                         ? ptf.uniformValue_().clone().ptr()
-                        : nullptr),
-      translationVelocity_(ptf.translationVelocity_) {}
+                        : nullptr) {}
 
 Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField(
     const uniformFixedVelocityFvPatchField &ptf,
     const DimensionedField<vector, volMesh> &iF)
-    : fixedValueFvPatchField<vector>(ptf, iF),
+    : fixedValueFvPatchField<vector>(ptf, iF), frameAwareBoundary(ptf),
       uniformValue_(ptf.uniformValue_.valid()
                         ? ptf.uniformValue_().clone().ptr()
-                        : nullptr),
-      translationVelocity_(ptf.translationVelocity_) {
+                        : nullptr) {
     /*
     // For safety re-evaluate
     const scalar t = this->db().time().timeOutputValue();
@@ -93,22 +89,18 @@ void Foam::uniformFixedVelocityFvPatchField::updateCoeffs() {
     }
 
     const scalar t = this->db().time().timeOutputValue();
-    operator==(uniformValue_->value(t) - translationVelocity_);
+    operator==(uniformValue_->value(t) - currentVelocity());
 
     fixedValueFvPatchVectorField::updateCoeffs();
 }
 
 void Foam::uniformFixedVelocityFvPatchField::write(Ostream &os) const {
     fvPatchField<vector>::write(os);
-    if(uniformValue_.valid())
+    if (uniformValue_.valid())
         uniformValue_->writeData(os);
-    os.writeKeyword("translationVelocity") << translationVelocity_
+    os.writeKeyword("translationVelocity") << currentVelocity()
                                            << token::END_STATEMENT << nl;
     writeEntry("value", os);
-}
-
-void Foam::uniformFixedVelocityFvPatchField::correct(const vector &VF) {
-    translationVelocity_ = VF;
 }
 
 namespace Foam {
