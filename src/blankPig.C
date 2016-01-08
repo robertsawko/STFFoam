@@ -44,23 +44,46 @@ Foam::blankPig::blankPig(const fvMesh &mesh, const IOdictionary &dict)
       pigPatchI_(mesh_.boundaryMesh().findPatchID(
           dict_.subDict(typeName + "Coeffs").lookup("pigPatch"))),
       pigDirection_(dict_.subDict(typeName + "Coeffs").lookup("pigDirection")),
-      pigMass_(dict_.subDict(typeName + "Coeffs").lookup("pigMass")),
+      mass_(
+          readScalar(dict_.subDict(typeName + "Coeffs").lookup("mass"))),
+      friction_(dict_.subDict(typeName + "Coeffs").lookup("frictionForce")),
       lambda0_(
           readScalar(dict_.subDict(typeName + "Coeffs").lookup("lambda"))) {}
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * *
 // * //
 
+
+vector blankPig::applyFriction(vector F) const
+{
+    //case 1: |v| != 0 (pig moving)
+    if (mag(VF_) != 0) {
+        F -= sign(pigDirection_ & VF_) * friction_;
+    }
+    //case 2: v == 0 |Fsum| > |F_static| (beginning to move)
+    else if (mag(pigDirection_ & F) > mag(friction_))
+    {
+        F -= sign(pigDirection_ & F) * friction_;
+    }
+    //case 3: v ==0 |Fsum| < |F_static|
+    else
+    {
+        F = vector(0, 0, 0);
+    }
+    return F;
+}
 vector Foam::blankPig::calculate_acceleration(const volScalarField &p,
                                               const volSymmTensorField &R) {
     
     vector pressure = gSum(mesh_.Sf().boundaryField()[pigPatchI_] *
-                           p.boundaryField()[sphereI_]);
+                           p.boundaryField()[pigPatchI_]);
 
     vector viscous = gSum(mesh_.Sf().boundaryField()[pigPatchI_] &
-                          R.boundaryField()[sphereI_]);
+                          R.boundaryField()[pigPatchI_]);
 
-    return (pressure + viscous) / pigMass_.value();
+    vector F = applyFriction(pressure + viscous);
+
+    return ((F / mass_) & pigDirection_) * pigDirection_;
 }
 
 // ************************************************************************* //

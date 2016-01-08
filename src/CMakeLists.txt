@@ -2,6 +2,7 @@ file(GLOB lib_source_files
   translationalFrame.C
   fallingObject.C
   centreOfVolume.C
+  blankPig.C
   uniformFixedVelocityFvPatchField.C
 )
 

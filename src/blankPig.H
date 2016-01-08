@@ -74,11 +74,13 @@ class blankPig : public translationalFrame {
     //- The ID of the patch identifying the front
     const label pigPatchI_;
     const vector pigDirection_;
-    const dimensionedScalar pigMass_;
+    const scalar mass_;
+    const vector friction_;
 
     //- Under relaxation factor for velocity
     const scalar lambda0_;
 
+    vector applyFriction(vector F) const;
     virtual vector calculate_acceleration(const volScalarField &,
                                           const volSymmTensorField &);
 
