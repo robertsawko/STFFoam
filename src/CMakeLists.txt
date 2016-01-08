@@ -1,5 +1,6 @@
 file(GLOB lib_source_files
   translationalFrame.C
+  constantTranslation.C
   fallingObject.C
   centreOfVolume.C
   blankPig.C
