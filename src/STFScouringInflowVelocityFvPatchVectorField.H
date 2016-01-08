@@ -25,62 +25,31 @@ Class
     Foam::STFScouringInflowVelocityFvPatchVectorField
 
 Group
-    grpInletBoundaryConditions
+    grpGenericBoundaryConditions
 
 Description
-    This boundary condition provides a velocity boundary condition, derived
-    from the flux (volumetric or mass-based), whose direction is assumed
-    to be normal to the patch.
-
-    For a mass-based flux:
-    - the flow rate should be provided in kg/s
-    - if \c rhoName is "none" the flow rate is in m3/s
-    - otherwise \c rhoName should correspond to the name of the density field
-    - if the density field cannot be found in the database, the user must
-      specify the inlet density using the \c rhoInlet entry
-
-    For a volumetric-based flux:
-    - the flow rate is in m3/s
+    This boundary condition provides a uniform fixed value condition.
 
     \heading Patch usage
 
     \table
         Property     | Description             | Required    | Default value
-        massFlowRate | mass flow rate [kg/s]   | no          |
-        volumetricFlowRate | volumetric flow rate [m3/s]| no |
-        rhoInlet     | inlet density           | no          |
+        uniformValue | uniform value           |         yes |
     \endtable
 
-    Example of the boundary condition specification for a volumetric flow rate:
+    Example of the boundary condition specification:
     \verbatim
     myPatch
     {
-        type        STFScouringInflowVelocity;
-        volumetricFlowRate  0.2;
-        value       uniform (0 0 0); // placeholder
+        type            uniformFixedValue;
+        uniformValue    constant 0.2;
     }
     \endverbatim
-
-    Example of the boundary condition specification for a mass flow rate:
-    \verbatim
-    myPatch
-    {
-        type                STFScouringInflowVelocity;
-        massFlowRate        0.2;
-        rho                 rho;
-        rhoInlet            1.0;
-    }
-    \endverbatim
-
-    The \c flowRate entry is a \c DataEntry type, meaning that it can be
-    specified as constant, a polynomial fuction of time, and ...
 
 Note
-    - \c rhoInlet is required for the case of a mass flow rate, where the
-      density field is not available at start-up
-    - the value is positive into the domain (as an inlet)
-    - may not work correctly for transonic inlets
-    - strange behaviour with potentialFoam since the U equation is not solved
+    The uniformValue entry is a DataEntry type, able to describe time
+    varying functions.  The example above gives the usage for supplying a
+    constant value.
 
 SeeAlso
     Foam::DataEntry
@@ -100,47 +69,43 @@ SourceFiles
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam {
+
 /*---------------------------------------------------------------------------*\
-           Class STFScouringInflowVelocityFvPatchVectorField Declaration
+                Class STFScouringInflowVelocityFvPatchVectorField Declaration
 \*---------------------------------------------------------------------------*/
 
-class STFScouringInflowVelocityFvPatchVectorField
-    : public fixedValueFvPatchVectorField {
+class STFScouringInflowVelocityFvPatchVectorField : public fixedValueFvPatchVectorField {
     // Private data
 
-    //- Inlet integral flow rate
-    autoPtr<DataEntry<scalar>> depositHeight_;
     autoPtr<DataEntry<scalar>> pipeDiameter_;
+    autoPtr<DataEntry<scalar>> depositHeight_;
     vector translationVelocity_;
 
   public:
     //- Runtime type information
-    TypeName("STFScouringInflowVelocity");
+    TypeName("STFScouringInflow");
 
     // Constructors
 
     //- Construct from patch and internal field
-    STFScouringInflowVelocityFvPatchVectorField(
-        const fvPatch &, const DimensionedField<vector, volMesh> &);
+    STFScouringInflowVelocityFvPatchVectorField(const fvPatch &,
+                                     const DimensionedField<vector, volMesh> &);
 
     //- Construct from patch, internal field and dictionary
-    STFScouringInflowVelocityFvPatchVectorField(
-        const fvPatch &,
-        const DimensionedField<vector, volMesh> &,
-        const dictionary &);
+    STFScouringInflowVelocityFvPatchVectorField(const fvPatch &,
+                                     const DimensionedField<vector, volMesh> &,
+                                     const dictionary &);
 
-    //- Construct by mapping given
-    //  STFScouringInflowVelocityFvPatchVectorField
+    //- Construct by mapping given STFScouringInflowVelocityFvPatchVectorField
     //  onto a new patch
-    STFScouringInflowVelocityFvPatchVectorField(
-        const STFScouringInflowVelocityFvPatchVectorField &,
-        const fvPatch &,
-        const DimensionedField<vector, volMesh> &,
-        const fvPatchFieldMapper &);
+    STFScouringInflowVelocityFvPatchVectorField(const STFScouringInflowVelocityFvPatchVectorField &,
+                                     const fvPatch &,
+                                     const DimensionedField<vector, volMesh> &,
+                                     const fvPatchFieldMapper &);
 
     //- Construct as copy
-    STFScouringInflowVelocityFvPatchVectorField(
-        const STFScouringInflowVelocityFvPatchVectorField &);
+    STFScouringInflowVelocityFvPatchVectorField(const STFScouringInflowVelocityFvPatchVectorField &);
+    virtual ~STFScouringInflowVelocityFvPatchVectorField() {}
 
     //- Construct and return a clone
     virtual tmp<fvPatchVectorField> clone() const {
@@ -149,9 +114,8 @@ class STFScouringInflowVelocityFvPatchVectorField
     }
 
     //- Construct as copy setting internal field reference
-    STFScouringInflowVelocityFvPatchVectorField(
-        const STFScouringInflowVelocityFvPatchVectorField &,
-        const DimensionedField<vector, volMesh> &);
+    STFScouringInflowVelocityFvPatchVectorField(const STFScouringInflowVelocityFvPatchVectorField &,
+                                     const DimensionedField<vector, volMesh> &);
 
     //- Construct and return a clone setting internal field reference
     virtual tmp<fvPatchVectorField>
@@ -162,12 +126,10 @@ class STFScouringInflowVelocityFvPatchVectorField
 
     // Member functions
 
-    //- Update the coefficients associated with the patch field given
-    //  uniform density field
-    // void updateCoeffs(const scalar uniformRho);
-
     //- Update the coefficients associated with the patch field
     virtual void updateCoeffs();
+
+    virtual void correct(const vector &VF);
 
     //- Write
     virtual void write(Ostream &) const;

@@ -107,8 +107,8 @@ class uniformFixedVelocityFvPatchField : public fixedValueFvPatchVectorField {
     virtual ~uniformFixedVelocityFvPatchField() {}
 
     //- Construct and return a clone
-    virtual tmp<fvPatchField<vector>> clone() const {
-        return tmp<fvPatchField<vector>>(
+    virtual tmp<fvPatchVectorField> clone() const {
+        return tmp<fvPatchVectorField>(
             new uniformFixedVelocityFvPatchField(*this));
     }
 
@@ -117,15 +117,13 @@ class uniformFixedVelocityFvPatchField : public fixedValueFvPatchVectorField {
                                      const DimensionedField<vector, volMesh> &);
 
     //- Construct and return a clone setting internal field reference
-    virtual tmp<fvPatchField<vector>>
+    virtual tmp<fvPatchVectorField>
     clone(const DimensionedField<vector, volMesh> &iF) const {
-        return tmp<fvPatchField<vector>>(
+        return tmp<fvPatchVectorField>(
             new uniformFixedVelocityFvPatchField(*this, iF));
     }
 
     // Member functions
-
-    // Evaluation functions
 
     //- Update the coefficients associated with the patch field
     virtual void updateCoeffs();
@@ -139,8 +137,6 @@ class uniformFixedVelocityFvPatchField : public fixedValueFvPatchVectorField {
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
