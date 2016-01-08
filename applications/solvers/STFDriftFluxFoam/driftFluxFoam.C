@@ -46,6 +46,8 @@ Description
 #include "gaussLaplacianScheme.H"
 #include "uncorrectedSnGrad.H"
 
+#include "translationalFrame.H"
+
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 int main(int argc, char *argv[])
@@ -60,6 +62,10 @@ int main(int argc, char *argv[])
     #include "createTimeControls.H"
     #include "createFields.H"
     #include "createMRF.H"
+    autoPtr<translationalFrame> frameOfReference (
+        translationalFrame::New(mesh)
+    );
+    frameOfReference->registerVelocity(U);
     #include "createFvOptions.H"
     #include "initContinuityErrs.H"
 
@@ -73,6 +79,7 @@ int main(int argc, char *argv[])
         #include "CourantNo.H"
         #include "setDeltaT.H"
 
+        frameOfReference->update(p, turbulence->devRhoReff());
         runTime++;
 
         Info<< "Time = " << runTime.timeName() << nl << endl;
