@@ -71,11 +71,6 @@ class translationalFrame : public functionObjectFile {
     Switch log_;
     word UName_;
 
-    //- The ID of the patch identifying the front
-    label sphereI_;
-    scalar mass_;
-    scalar apparentMass_;
-
     std::vector<uniformFixedVelocityFvPatchField *> registeredPatches;
 
     virtual vector calculate_acceleration(const volScalarField &,
