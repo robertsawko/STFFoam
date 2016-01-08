@@ -4,3 +4,4 @@ include_directories ("${PROJECT_SOURCE_DIR}/src/")
 
 add_subdirectory(STFPimpleFoam)
 add_subdirectory(STFInterFoam)
+add_subdirectory(STFDriftFluxFoam)
