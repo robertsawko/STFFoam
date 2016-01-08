@@ -5,6 +5,7 @@ file(GLOB lib_source_files
   centreOfVolume.C
   blankPig.C
   uniformFixedVelocityFvPatchField.C
+  STFScouringInflowVelocityFvPatchVectorField.C
 )
 
 add_library(STF SHARED ${lib_source_files})

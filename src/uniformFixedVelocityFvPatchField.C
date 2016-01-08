@@ -36,7 +36,7 @@ Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField
 :
     fixedValueFvPatchField<vector>(p, iF),
     uniformValue_(),
-    translationVelocity_(0, 0, 0)
+    translationVelocity_(vector::zero)
 {}
 
 
@@ -68,7 +68,7 @@ Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField
 :
     fixedValueFvPatchField<vector>(p, iF),
     uniformValue_(DataEntry<vector>::New("uniformValue", dict)),
-    translationVelocity_(0, 0, 0)
+    translationVelocity_(vector::zero)
 {
     const scalar t = this->db().time().timeOutputValue();
     fvPatchField<vector>::operator=(vectorField("value", dict, p.size()));
@@ -85,7 +85,7 @@ Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField
     (
         ptf.uniformValue_.valid()
       ? ptf.uniformValue_().clone().ptr()
-      : NULL
+      : nullptr
     ),
     translationVelocity_(ptf.translationVelocity_)
 {}
@@ -102,7 +102,7 @@ Foam::uniformFixedVelocityFvPatchField::uniformFixedVelocityFvPatchField
     (
         ptf.uniformValue_.valid()
       ? ptf.uniformValue_().clone().ptr()
-      : NULL
+      : nullptr
     ),
     translationVelocity_(ptf.translationVelocity_)
 {

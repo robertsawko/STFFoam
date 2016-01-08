@@ -42,7 +42,7 @@ addToRunTimeSelectionTable(translationalFrame, constantTranslation, dictionary);
 Foam::constantTranslation::constantTranslation(const fvMesh &mesh,
                                                const IOdictionary &dict)
     : translationalFrame(mesh, dict) {
-    VF_ = dict_.subDict(typeName + "Coeffs").lookup("velocity");
+    VF_ = dict_.subDict(typeName + "Coeffs").lookup("velocity0");
 }
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
