@@ -23,15 +23,15 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "blankPig.H"
+#include "bypassPig.H"
 #include "fvCFD.H"
 
 #include "addToRunTimeSelectionTable.H"
 
 namespace Foam {
-defineTypeNameAndDebug(blankPig, 0);
+defineTypeNameAndDebug(bypassPig, 0);
 
-addToRunTimeSelectionTable(translationalFrame, blankPig, dictionary);
+addToRunTimeSelectionTable(translationalFrame, bypassPig, dictionary);
 }
 
 // * * * * * * * * * * * * * * Static Data Members * * * * * * * * * * * * * //
@@ -39,7 +39,7 @@ addToRunTimeSelectionTable(translationalFrame, blankPig, dictionary);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::blankPig::blankPig(const fvMesh &mesh, const IOdictionary &dict)
+Foam::bypassPig::bypassPig(const fvMesh &mesh, const IOdictionary &dict)
     : translationalFrame(mesh, dict),
       pigPatchI_(mesh_.boundaryMesh().findPatchID(
           dict_.subDict(typeName + "Coeffs").lookup("pigPatch"))),
@@ -54,7 +54,7 @@ Foam::blankPig::blankPig(const fvMesh &mesh, const IOdictionary &dict)
 // * //
 
 
-vector blankPig::applyFriction(vector F) const
+vector bypassPig::applyFriction(vector F) const
 {
     //case 1: |v| != 0 (pig moving)
     if (mag(VF_) != 0) {
@@ -72,7 +72,7 @@ vector blankPig::applyFriction(vector F) const
     }
     return F;
 }
-vector Foam::blankPig::calculate_acceleration(const volScalarField &p,
+vector Foam::bypassPig::calculate_acceleration(const volScalarField &p,
                                               const volSymmTensorField &R) {
     
     vector pressure = gSum(mesh_.Sf().boundaryField()[pigPatchI_] *

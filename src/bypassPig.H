@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::blankPig
+    Foam::fv::bypassPig
 
 Description
     Object is propelled through hydraulic action and experiences wall
@@ -34,9 +34,9 @@ interaction.
     \verbatim
     modelType ;
 
-    translationModel blankPig;
+    translationModel bypassPig;
 
-    blankPigCoeffs
+    bypassPigCoeffs
     {
         mass 1;
         pigPatch pig;
@@ -45,12 +45,12 @@ interaction.
 
 
 SourceFiles
-    blankPig.C
+    bypassPig.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef blankPig_H
-#define blankPig_H
+#ifndef bypassPig_H
+#define bypassPig_H
 
 #include "translationalFrame.H"
 
@@ -58,18 +58,18 @@ SourceFiles
 
 namespace Foam {
 /*---------------------------------------------------------------------------*\
-                          Class blankPig Declaration
+                          Class bypassPig Declaration
 \*---------------------------------------------------------------------------*/
 
-class blankPig : public translationalFrame {
+class bypassPig : public translationalFrame {
   private:
     // Private Member Functions
 
     //- Disallow default bitwise copy construct
-    blankPig(const blankPig &);
+    bypassPig(const bypassPig &);
 
     //- Disallow default bitwise assignment
-    void operator=(const blankPig &);
+    void operator=(const bypassPig &);
 
     //- The ID of the patch identifying the front
     const label pigPatchI_;
@@ -85,11 +85,11 @@ class blankPig : public translationalFrame {
                                           const volSymmTensorField &);
 
   public:
-    TypeName("blankPig");
+    TypeName("bypassPig");
 
-    blankPig(const fvMesh &, const IOdictionary &);
+    bypassPig(const fvMesh &, const IOdictionary &);
 
-    virtual ~blankPig() {}
+    virtual ~bypassPig() {}
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
