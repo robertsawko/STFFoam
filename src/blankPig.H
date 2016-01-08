@@ -25,21 +25,21 @@ Class
     Foam::fv::blankPig
 
 Description
-    Object moving under the action of gravity and surrounding fluid.
+    Object is propelled through hydraulic action and experiences wall
+interaction.
 
     \heading Source usage
 
     Example usage:
     \verbatim
-    modelType ; 
+    modelType ;
 
     translationModel blankPig;
 
-    blankPigCoeffs 
+    blankPigCoeffs
     {
-        mass 0.62;
-        apparentMass 0.0961;
-        objectName sphere;
+        mass 1;
+        pigPatch pig;
     }
     \endverbatim
 
@@ -66,22 +66,21 @@ class blankPig : public translationalFrame {
     // Private Member Functions
 
     //- Disallow default bitwise copy construct
-    blankPig(const centreOfVolume &);
+    blankPig(const blankPig &);
 
     //- Disallow default bitwise assignment
     void operator=(const blankPig &);
 
     //- The ID of the patch identifying the front
-    const volScalarField &alpha_;
+    const label pigPatchI_;
+    const vector pigDirection_;
+    const dimensionedScalar pigMass_;
 
-    const dimensionedVector xinit_;
-    dimensionedVector xold_;
-
-    const scalar lambdaF_;
-    const scalar lambdad_;
+    //- Under relaxation factor for velocity
+    const scalar lambda0_;
 
     virtual vector calculate_acceleration(const volScalarField &,
-                                  const volSymmTensorField &);
+                                          const volSymmTensorField &);
 
   public:
     TypeName("blankPig");

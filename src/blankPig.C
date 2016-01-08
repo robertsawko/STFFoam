@@ -39,40 +39,28 @@ addToRunTimeSelectionTable(translationalFrame, blankPig, dictionary);
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::blankPig::centreOfVolume(const fvMesh &mesh,
-                                     const IOdictionary &dict)
+Foam::blankPig::blankPig(const fvMesh &mesh, const IOdictionary &dict)
     : translationalFrame(mesh, dict),
-      alpha_(mesh_.lookupObject<volScalarField>("alpha.air")),
-      xinit_("x_0",
-             fvc::domainIntegrate(alpha_ * mesh_.C()) /
-                 fvc::domainIntegrate(alpha_)),
-      xold_("x_o", xinit_),
-      lambdaF_(
-          readScalar(dict_.subDict(typeName + "Coeffs").lookup("lambdaF"))),
-      lambdad_(
-          readScalar(dict_.subDict(typeName + "Coeffs").lookup("lambdad"))) {}
+      pigPatchI_(mesh_.boundaryMesh().findPatchID(
+          dict_.subDict(typeName + "Coeffs").lookup("pigPatch"))),
+      pigDirection_(dict_.subDict(typeName + "Coeffs").lookup("pigDirection")),
+      pigMass_(dict_.subDict(typeName + "Coeffs").lookup("pigMass")),
+      lambda0_(
+          readScalar(dict_.subDict(typeName + "Coeffs").lookup("lambda"))) {}
 
-// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * * * //
+// * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * *
+// * //
 
-vector
-Foam::blankPig::calculate_acceleration(const volScalarField &p,
-                                             const volSymmTensorField &R) {
-    const Time& t = mesh_.time();
+vector Foam::blankPig::calculate_acceleration(const volScalarField &p,
+                                              const volSymmTensorField &R) {
+    
+    vector pressure = gSum(mesh_.Sf().boundaryField()[pigPatchI_] *
+                           p.boundaryField()[sphereI_]);
 
-    dimensionedVector xcurrent(
-        "xd",
-        fvc::domainIntegrate(alpha_ * mesh_.C()) // centre of mass
-            /
-            fvc::domainIntegrate(alpha_));
+    vector viscous = gSum(mesh_.Sf().boundaryField()[pigPatchI_] &
+                          R.boundaryField()[sphereI_]);
 
-    // Velocity difference (Rusche approach)
-    dimensionedVector DeltaV("DeltaV",
-                             (lambdaF_ * (xinit_ - xcurrent)) / t.deltaT() -
-                                 lambdad_ * (xcurrent - xold_) / t.deltaT());
-
-    xold_.value() = xcurrent.value();
-
-    return -(DeltaV / t.deltaT()).value();
+    return (pressure + viscous) / pigMass_.value();
 }
 
 // ************************************************************************* //
