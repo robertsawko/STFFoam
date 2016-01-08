@@ -20,7 +20,7 @@ phases (air water);
 air
 {
     transportModel  Newtonian;
-    nu              nu [ 0 2 -1 0 0 0 0 ] 15.11e-6;
+    nu              nu [ 0 2 -1 0 0 0 0 ] 1.48e-5;
     rho             rho [ 1 -3 0 0 0 0 0 ] 1;
 }
 
@@ -31,7 +31,7 @@ water
     rho             rho [ 1 -3 0 0 0 0 0 ] 1000;
 }
 //water-air contact at 20C
-sigma           sigma [ 1 0 -2 0 0 0 0 ] 7.28e-2;
+sigma           sigma [ 1 0 -2 0 0 0 0] 0.0707106;;
 
 
 // ************************************************************************* //
