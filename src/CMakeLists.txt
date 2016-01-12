@@ -3,7 +3,7 @@ file(GLOB lib_source_files
   constantTranslation.C
   fallingObject.C
   centreOfVolume.C
-  blankPig.C
+  bypassPig.C
   frameAwareBoundary.C
   translatingFixedVelocityFvPatchField.C
   STFScouringInflowVelocityFvPatchVectorField.C

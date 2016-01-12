@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::uniformFixedVelocityFvPatchField
+    Foam::translatingFixedVelocityFvPatchField
 
 Group
     grpGenericBoundaryConditions
@@ -34,7 +34,7 @@ Description
 
     \table
         Property     | Description             | Required    | Default value
-        uniformValue | uniform value           |         yes |
+        fixedFrameValue | uniform value           |         yes |
     \endtable
 
     Example of the boundary condition specification:
@@ -42,12 +42,12 @@ Description
     myPatch
     {
         type            uniformFixedValue;
-        uniformValue    constant 0.2;
+        fixedFrameValue    constant 0.2;
     }
     \endverbatim
 
 Note
-    The uniformValue entry is a DataEntry type, able to describe time
+    The fixedFrameValue entry is a DataEntry type, able to describe time
     varying functions.  The example above gives the usage for supplying a
     constant value.
 
@@ -56,12 +56,12 @@ SeeAlso
     Foam::fixedValueFvPatchField
 
 SourceFiles
-    uniformFixedVelocityFvPatchField.C
+    translatingFixedVelocityFvPatchField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef uniformFixedVelocityFvPatchField_H
-#define uniformFixedVelocityFvPatchField_H
+#ifndef translatingFixedVelocityFvPatchField_H
+#define translatingFixedVelocityFvPatchField_H
 
 #include "fixedValueFvPatchFields.H"
 #include "frameAwareBoundary.H"
@@ -72,14 +72,14 @@ SourceFiles
 namespace Foam {
 
 /*---------------------------------------------------------------------------*\
-                Class uniformFixedVelocityFvPatchField Declaration
+                Class translatingFixedVelocityFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
-class uniformFixedVelocityFvPatchField : public fixedValueFvPatchVectorField,
+class translatingFixedVelocityFvPatchField : public fixedValueFvPatchVectorField,
                                          public frameAwareBoundary {
     // Private data
 
-    autoPtr<DataEntry<vector>> uniformValue_;
+    autoPtr<DataEntry<vector>> fixedFrameValue_;
 
   public:
     //- Runtime type information
@@ -88,40 +88,40 @@ class uniformFixedVelocityFvPatchField : public fixedValueFvPatchVectorField,
     // Constructors
 
     //- Construct from patch and internal field
-    uniformFixedVelocityFvPatchField(const fvPatch &,
+    translatingFixedVelocityFvPatchField(const fvPatch &,
                                      const DimensionedField<vector, volMesh> &);
 
     //- Construct from patch, internal field and dictionary
-    uniformFixedVelocityFvPatchField(const fvPatch &,
+    translatingFixedVelocityFvPatchField(const fvPatch &,
                                      const DimensionedField<vector, volMesh> &,
                                      const dictionary &);
 
-    //- Construct by mapping given uniformFixedVelocityFvPatchField
+    //- Construct by mapping given translatingFixedVelocityFvPatchField
     //  onto a new patch
-    uniformFixedVelocityFvPatchField(const uniformFixedVelocityFvPatchField &,
+    translatingFixedVelocityFvPatchField(const translatingFixedVelocityFvPatchField &,
                                      const fvPatch &,
                                      const DimensionedField<vector, volMesh> &,
                                      const fvPatchFieldMapper &);
 
     //- Construct as copy
-    uniformFixedVelocityFvPatchField(const uniformFixedVelocityFvPatchField &);
-    virtual ~uniformFixedVelocityFvPatchField() {}
+    translatingFixedVelocityFvPatchField(const translatingFixedVelocityFvPatchField &);
+    virtual ~translatingFixedVelocityFvPatchField() {}
 
     //- Construct and return a clone
     virtual tmp<fvPatchVectorField> clone() const {
         return tmp<fvPatchVectorField>(
-            new uniformFixedVelocityFvPatchField(*this));
+            new translatingFixedVelocityFvPatchField(*this));
     }
 
     //- Construct as copy setting internal field reference
-    uniformFixedVelocityFvPatchField(const uniformFixedVelocityFvPatchField &,
+    translatingFixedVelocityFvPatchField(const translatingFixedVelocityFvPatchField &,
                                      const DimensionedField<vector, volMesh> &);
 
     //- Construct and return a clone setting internal field reference
     virtual tmp<fvPatchVectorField>
     clone(const DimensionedField<vector, volMesh> &iF) const {
         return tmp<fvPatchVectorField>(
-            new uniformFixedVelocityFvPatchField(*this, iF));
+            new translatingFixedVelocityFvPatchField(*this, iF));
     }
 
     // Member functions

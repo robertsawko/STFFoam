@@ -47,8 +47,8 @@ Foam::bypassPig::bypassPig(const fvMesh &mesh, const IOdictionary &dict)
       mass_(
           readScalar(dict_.subDict(typeName + "Coeffs").lookup("mass"))),
       friction_(dict_.subDict(typeName + "Coeffs").lookup("frictionForce")),
-      lambda0_(
-          readScalar(dict_.subDict(typeName + "Coeffs").lookup("lambda"))) {}
+      lambda_(readScalar(dict_.subDict(typeName + "Coeffs").lookup("lambda")))
+      {}
 
 // * * * * * * * * * * * * * * * Member Functions  * * * * * * * * * * * *
 // * //
@@ -83,7 +83,10 @@ vector Foam::bypassPig::calculate_acceleration(const volScalarField &p,
 
     vector F = applyFriction(pressure + viscous);
 
-    return ((F / mass_) & pigDirection_) * pigDirection_;
+    Info << "Welcome to bypassPig::calculate_acceleration()" << endl
+         << F << endl << VF_ << endl;
+
+    return lambda_ * ((F / mass_) & pigDirection_) * pigDirection_;
 }
 
 // ************************************************************************* //

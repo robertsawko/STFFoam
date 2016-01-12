@@ -76,9 +76,7 @@ class bypassPig : public translationalFrame {
     const vector pigDirection_;
     const scalar mass_;
     const vector friction_;
-
-    //- Under relaxation factor for velocity
-    const scalar lambda0_;
+    const scalar lambda_;
 
     vector applyFriction(vector F) const;
     virtual vector calculate_acceleration(const volScalarField &,
