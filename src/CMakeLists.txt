@@ -5,7 +5,7 @@ file(GLOB lib_source_files
   centreOfVolume.C
   blankPig.C
   frameAwareBoundary.C
-  uniformFixedVelocityFvPatchField.C
+  translatingFixedVelocityFvPatchField.C
   STFScouringInflowVelocityFvPatchVectorField.C
 )
 
