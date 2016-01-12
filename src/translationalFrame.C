@@ -59,11 +59,11 @@ void Foam::translationalFrame::registerVelocity(volVectorField &U) {
 
     forAll(patches, patchi) {
         fvPatchVectorField &currPatch = patches[patchi];
-        if (isA<uniformFixedVelocityFvPatchField>(currPatch)) {
+        if (isA<frameAwareBoundary>(currPatch)) {
             Info << "Registering: " << currPatch.patch().name() << " patch of "
                  << UName_ << " field. " << endl;
-            uniformFixedVelocityFvPatchField &p =
-                refCast<uniformFixedVelocityFvPatchField>(currPatch);
+            frameAwareBoundary &p =
+                dynamic_cast<frameAwareBoundary&>(currPatch);
             registeredPatches.push_back(&p);
         }
     }

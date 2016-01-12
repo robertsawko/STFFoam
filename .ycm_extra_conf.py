@@ -34,6 +34,7 @@ import ycm_core
 
 foam_app = os.environ['FOAM_APP']
 foam_src = os.environ['FOAM_SRC']
+drift_foam_dir = foam_app + '/multiphase/driftFluxFoam'
 flags = [
     '-DSTF_EXPORTS',
     '-m64',
@@ -66,6 +67,7 @@ flags = [
     'c++',
     # This path will only work on OS X, but extra paths that don't exist are
     # not harmful
+    '-I' + drift_foam_dir + '/incompressibleTwoPhaseInteractingMixture',
     '-I' + foam_src + '/fvOptions/lnInclude',
     '-I' + foam_src + '/finiteVolume/lnInclude',
     '-I' + foam_src + '/meshTools/lnInclude',

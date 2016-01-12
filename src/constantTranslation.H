@@ -22,83 +22,64 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::translationalFrame
+    Foam::fv::constantTranslation
 
 Description
-    Non-inertial frame supporting non-uniform acceleration. The type of
-    acceleration can be specified via a motion model. Configured through
-    constant/STFProperties
+    Object moving under the action of gravity and surrounding fluid.
+
+    \heading Source usage
+
+    Example usage:
+    \verbatim
+    modelType ; 
+
+    translationModel constantTranslation;
+
+    constantTranslationCoeffs 
+    {
+        mass 0.62;
+        apparentMass 0.0961;
+        objectName sphere;
+    }
+    \endverbatim
 
 
 SourceFiles
-    translationalFrame.C
+    constantTranslation.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef translationalFrame_H
-#define translationalFrame_H
+#ifndef constantTranslation_H
+#define constantTranslation_H
 
-#include "functionObjectFile.H"
-#include "fvMesh.H"
-#include "dimensionedTypes.H"
-#include "Switch.H"
-#include <vector>
-#include "frameAwareBoundary.H"
-
-#include "autoPtr.H"
-#include "runTimeSelectionTables.H"
+#include "translationalFrame.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam {
 /*---------------------------------------------------------------------------*\
-                          Class translationalFrame Declaration
+                          Class constantTranslation Declaration
 \*---------------------------------------------------------------------------*/
 
-class translationalFrame : public functionObjectFile {
+class constantTranslation : public translationalFrame {
   private:
+    // Private Member Functions
+
     //- Disallow default bitwise copy construct
-    translationalFrame(const translationalFrame &);
+    constantTranslation(const constantTranslation &);
 
     //- Disallow default bitwise assignment
-    void operator=(const translationalFrame &);
-
-  protected:
-    IOdictionary dict_;
-    const fvMesh &mesh_;
-    vector VF_;
-    vector aF_;
-    Switch log_;
-    word UName_;
-
-    std::vector<frameAwareBoundary *> registeredPatches;
+    void operator=(const constantTranslation &);
 
     virtual vector calculate_acceleration(const volScalarField &,
-                                  const volSymmTensorField &) = 0;
+                                  const volSymmTensorField &);
 
   public:
-    TypeName("translationalFrame");
+    TypeName("constantTranslation");
 
-    declareRunTimeSelectionTable(autoPtr,
-                                 translationalFrame,
-                                 dictionary,
-                                 (const fvMesh &mesh, const IOdictionary &dict),
-                                 (mesh, dict));
+    constantTranslation(const fvMesh &, const IOdictionary &);
 
-    // Selector
-    static autoPtr<translationalFrame>
-    New(const fvMesh &mesh);
-    
-    translationalFrame(const fvMesh &, const IOdictionary &);
-
-    virtual ~translationalFrame() {}
-
-    void registerVelocity(volVectorField &U);
-    void correctBoundaryVelocity(volVectorField &U) const;
-    void update(const volScalarField &p, const volSymmTensorField &R);
-    dimensionedVector aF() const {
-        return dimensionedVector("aF", dimAcceleration, aF_);
-    }
+    virtual ~constantTranslation() {}
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

@@ -22,83 +22,72 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::fv::translationalFrame
+    Foam::fv::bypassPig
 
 Description
-    Non-inertial frame supporting non-uniform acceleration. The type of
-    acceleration can be specified via a motion model. Configured through
-    constant/STFProperties
+    Object is propelled through hydraulic action and experiences wall
+interaction.
+
+    \heading Source usage
+
+    Example usage:
+    \verbatim
+    modelType ;
+
+    translationModel bypassPig;
+
+    bypassPigCoeffs
+    {
+        mass 1;
+        pigPatch pig;
+    }
+    \endverbatim
 
 
 SourceFiles
-    translationalFrame.C
+    bypassPig.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef translationalFrame_H
-#define translationalFrame_H
+#ifndef bypassPig_H
+#define bypassPig_H
 
-#include "functionObjectFile.H"
-#include "fvMesh.H"
-#include "dimensionedTypes.H"
-#include "Switch.H"
-#include <vector>
-#include "frameAwareBoundary.H"
-
-#include "autoPtr.H"
-#include "runTimeSelectionTables.H"
+#include "translationalFrame.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 namespace Foam {
 /*---------------------------------------------------------------------------*\
-                          Class translationalFrame Declaration
+                          Class bypassPig Declaration
 \*---------------------------------------------------------------------------*/
 
-class translationalFrame : public functionObjectFile {
+class bypassPig : public translationalFrame {
   private:
+    // Private Member Functions
+
     //- Disallow default bitwise copy construct
-    translationalFrame(const translationalFrame &);
+    bypassPig(const bypassPig &);
 
     //- Disallow default bitwise assignment
-    void operator=(const translationalFrame &);
+    void operator=(const bypassPig &);
 
-  protected:
-    IOdictionary dict_;
-    const fvMesh &mesh_;
-    vector VF_;
-    vector aF_;
-    Switch log_;
-    word UName_;
+    //- The ID of the patch identifying the front
+    const label pigPatchI_;
+    const vector pigDirection_;
+    const scalar mass_;
+    const vector friction_;
+    const scalar lambda_;
 
-    std::vector<frameAwareBoundary *> registeredPatches;
-
+    vector applyFriction(vector F) const;
     virtual vector calculate_acceleration(const volScalarField &,
-                                  const volSymmTensorField &) = 0;
+                                          const volSymmTensorField &);
 
   public:
-    TypeName("translationalFrame");
+    TypeName("bypassPig");
 
-    declareRunTimeSelectionTable(autoPtr,
-                                 translationalFrame,
-                                 dictionary,
-                                 (const fvMesh &mesh, const IOdictionary &dict),
-                                 (mesh, dict));
+    bypassPig(const fvMesh &, const IOdictionary &);
 
-    // Selector
-    static autoPtr<translationalFrame>
-    New(const fvMesh &mesh);
-    
-    translationalFrame(const fvMesh &, const IOdictionary &);
-
-    virtual ~translationalFrame() {}
-
-    void registerVelocity(volVectorField &U);
-    void correctBoundaryVelocity(volVectorField &U) const;
-    void update(const volScalarField &p, const volSymmTensorField &R);
-    dimensionedVector aF() const {
-        return dimensionedVector("aF", dimAcceleration, aF_);
-    }
+    virtual ~bypassPig() {}
 };
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //

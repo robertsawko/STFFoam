@@ -1,8 +1,12 @@
 file(GLOB lib_source_files
   translationalFrame.C
+  constantTranslation.C
   fallingObject.C
   centreOfVolume.C
-  uniformFixedVelocityFvPatchField.C
+  bypassPig.C
+  frameAwareBoundary.C
+  translatingFixedVelocityFvPatchField.C
+  STFScouringInflowVelocityFvPatchVectorField.C
 )
 
 add_library(STF SHARED ${lib_source_files})

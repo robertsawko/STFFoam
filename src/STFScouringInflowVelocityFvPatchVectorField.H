@@ -22,7 +22,7 @@ License
     along with OpenFOAM.  If not, see <http://www.gnu.org/licenses/>.
 
 Class
-    Foam::uniformFixedVelocityFvPatchField
+    Foam::STFScouringInflowVelocityFvPatchVectorField
 
 Group
     grpGenericBoundaryConditions
@@ -56,14 +56,15 @@ SeeAlso
     Foam::fixedValueFvPatchField
 
 SourceFiles
-    uniformFixedVelocityFvPatchField.C
+    STFScouringInflowVelocityFvPatchVectorField.C
 
 \*---------------------------------------------------------------------------*/
 
-#ifndef uniformFixedVelocityFvPatchField_H
-#define uniformFixedVelocityFvPatchField_H
+#ifndef STFScouringInflowVelocityFvPatchVectorField_H
+#define STFScouringInflowVelocityFvPatchVectorField_H
 
 #include "fixedValueFvPatchFields.H"
+#include "frameAwareBoundary.H"
 #include "DataEntry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -71,66 +72,68 @@ SourceFiles
 namespace Foam {
 
 /*---------------------------------------------------------------------------*\
-                Class uniformFixedVelocityFvPatchField Declaration
+                Class STFScouringInflowVelocityFvPatchVectorField Declaration
 \*---------------------------------------------------------------------------*/
 
-class uniformFixedVelocityFvPatchField : public fixedValueFvPatchVectorField {
+class STFScouringInflowVelocityFvPatchVectorField
+    : public fixedValueFvPatchVectorField,
+      public frameAwareBoundary {
     // Private data
 
-    autoPtr<DataEntry<vector>> uniformValue_;
-    vector translationVelocity_;
+    autoPtr<DataEntry<scalar>> pipeDiameter_;
+    autoPtr<DataEntry<scalar>> depositHeight_;
 
   public:
     //- Runtime type information
-    TypeName("uniformFixedVelocity");
+    TypeName("STFScouringInflow");
 
     // Constructors
 
     //- Construct from patch and internal field
-    uniformFixedVelocityFvPatchField(const fvPatch &,
-                                     const DimensionedField<vector, volMesh> &);
+    STFScouringInflowVelocityFvPatchVectorField(
+        const fvPatch &, const DimensionedField<vector, volMesh> &);
 
     //- Construct from patch, internal field and dictionary
-    uniformFixedVelocityFvPatchField(const fvPatch &,
-                                     const DimensionedField<vector, volMesh> &,
-                                     const dictionary &);
+    STFScouringInflowVelocityFvPatchVectorField(
+        const fvPatch &,
+        const DimensionedField<vector, volMesh> &,
+        const dictionary &);
 
-    //- Construct by mapping given uniformFixedVelocityFvPatchField
+    //- Construct by mapping given STFScouringInflowVelocityFvPatchVectorField
     //  onto a new patch
-    uniformFixedVelocityFvPatchField(const uniformFixedVelocityFvPatchField &,
-                                     const fvPatch &,
-                                     const DimensionedField<vector, volMesh> &,
-                                     const fvPatchFieldMapper &);
+    STFScouringInflowVelocityFvPatchVectorField(
+        const STFScouringInflowVelocityFvPatchVectorField &,
+        const fvPatch &,
+        const DimensionedField<vector, volMesh> &,
+        const fvPatchFieldMapper &);
 
     //- Construct as copy
-    uniformFixedVelocityFvPatchField(const uniformFixedVelocityFvPatchField &);
-    virtual ~uniformFixedVelocityFvPatchField() {}
+    STFScouringInflowVelocityFvPatchVectorField(
+        const STFScouringInflowVelocityFvPatchVectorField &);
+    virtual ~STFScouringInflowVelocityFvPatchVectorField() {}
 
     //- Construct and return a clone
-    virtual tmp<fvPatchField<vector>> clone() const {
-        return tmp<fvPatchField<vector>>(
-            new uniformFixedVelocityFvPatchField(*this));
+    virtual tmp<fvPatchVectorField> clone() const {
+        return tmp<fvPatchVectorField>(
+            new STFScouringInflowVelocityFvPatchVectorField(*this));
     }
 
     //- Construct as copy setting internal field reference
-    uniformFixedVelocityFvPatchField(const uniformFixedVelocityFvPatchField &,
-                                     const DimensionedField<vector, volMesh> &);
+    STFScouringInflowVelocityFvPatchVectorField(
+        const STFScouringInflowVelocityFvPatchVectorField &,
+        const DimensionedField<vector, volMesh> &);
 
     //- Construct and return a clone setting internal field reference
-    virtual tmp<fvPatchField<vector>>
+    virtual tmp<fvPatchVectorField>
     clone(const DimensionedField<vector, volMesh> &iF) const {
-        return tmp<fvPatchField<vector>>(
-            new uniformFixedVelocityFvPatchField(*this, iF));
+        return tmp<fvPatchVectorField>(
+            new STFScouringInflowVelocityFvPatchVectorField(*this, iF));
     }
 
     // Member functions
 
-    // Evaluation functions
-
     //- Update the coefficients associated with the patch field
     virtual void updateCoeffs();
-
-    virtual void correct(const vector &VF);
 
     //- Write
     virtual void write(Ostream &) const;
@@ -139,8 +142,6 @@ class uniformFixedVelocityFvPatchField : public fixedValueFvPatchVectorField {
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 } // End namespace Foam
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
