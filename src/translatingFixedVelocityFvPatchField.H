@@ -83,7 +83,7 @@ class uniformFixedVelocityFvPatchField : public fixedValueFvPatchVectorField,
 
   public:
     //- Runtime type information
-    TypeName("uniformFixedVelocity");
+    TypeName("translatingFixedVelocity");
 
     // Constructors
 
