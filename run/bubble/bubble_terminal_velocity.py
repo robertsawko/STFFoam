@@ -2,23 +2,36 @@ from numpy import sqrt, linspace
 from scipy.optimize import brentq
 
 """
-Based on Tomiyama
+The calculations are heavily based on:
+
+    Tomiyama, A, Kataoka, I., Zun, I. and Sakaguchi, T. "Drag
+    Coefficients of single bubbles under normal and micro gravity
+    conditions", JSME International Journal, Series B Vol 41, No 2 1998
 """
 
-geff = 9.81
 
+def EotvosNumber(rhoc, rhod, sigma, d, geff=9.81):
+    """Eotvos number expression
 
-def Eof(rhoc, rhod, sigma, d):
+    Non-dimensional number that measures the importance of surface
+    tension compared to body forces.
+    """
     return geff * abs(rhod - rhoc) * d**2 / sigma
 
 
-def Mof(rhoc, rhod, sigma, muc):
+def MortonNumber(rhoc, rhod, sigma, muc, geff=9.81):
+    """Morton number expression
+
+    Non-dimensional number chracterising fluid material properties
+    """
     return \
         geff * muc**4 * abs(rhod - rhoc) /\
         (sigma**3 * rhoc**2)
 
 
 def Cd(Re, Eo):
+    """Tomiyama drag coefficient for pure system
+    """
     return max(
         min(
             16 / Re * (1 + 0.15 * Re**0.687),
@@ -27,6 +40,12 @@ def Cd(Re, Eo):
 
 
 def ReEoMo_equation(Re, Eo, Mo):
+    """Force balance equation in nondimensional form
+
+    Tomiyama, A, Kataoka, I., Zun, I. and Sakaguchi, T. "Drag
+    Coefficients of single bubbles under normal and micro gravity
+    conditions", JSME International Journal, Series B Vol 41, No 2 1998
+    """
     return Re**2 * Cd(Re, Eo) - 4 / 3 * sqrt(Eo**3 / Mo)
 
 
@@ -40,15 +59,14 @@ D = 1.0
 R = D / 2
 
 nuw = 1.0e-6
-nub = 1.48e-5
 muw = rhow * nuw
 
 sigma = 0.0707106
-ds = linspace(0.001, 0.005, 5)
+diameters = linspace(0.001, 0.005, 5)
 
-for d in ds:
-    Eo = Eof(rhoc=rhow, rhod=rhob, sigma=sigma, d=d)
-    Mo = Mof(rhoc=rhow, rhod=rhob, sigma=sigma, muc=muw)
+for d in diameters:
+    Eo = EotvosNumber(rhoc=rhow, rhod=rhob, sigma=sigma, d=d)
+    Mo = MortonNumber(rhoc=rhow, rhod=rhob, sigma=sigma, muc=muw)
     result = brentq(lambda x: ReEoMo_equation(x, Eo, Mo), 0.001, 2000)
     print('{0:0.3f} {1:0.3f}'.format(
         d, terminal_velocity(result, muw, rhow, d)))
