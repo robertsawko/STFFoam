@@ -26,9 +26,9 @@ expressions
 	}
 	setBubble
 	{
-		field alpha.air ;
-		expression "1" ;
+		field       alpha.air ;
+		expression  "1" ;
 		keepPatches true ;
-		condition "mag(pos()-vector(0.007,0.004,0.004))<0.0005" ;
+                condition   "mag(pos() - vector(0.007, 0, 0))<0.0005";
 	}
 );

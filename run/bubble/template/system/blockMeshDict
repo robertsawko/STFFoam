@@ -16,21 +16,29 @@ FoamFile
 
 convertToMeters 1;
 
+width 8e-3;
+nside 50; 
+
+half_width  #calc "$width / 2";
+mhalf_width #calc "-$half_width";
+
+nl #calc "floor(0.01 / $width * $nside)";
+
 vertices        
 (
-    (0 0 0) //0
-    (0.01 0 0) //1
-    (0.01 8e-3 0) //2
-    (0 8e-3 0) //3
-    (0 0 8e-3) //4
-    (0.01 0 8e-3) //5
-    (0.01 8e-3 8e-3) //6
-    (0 8e-3 8e-3) //7
+    (0    $mhalf_width $mhalf_width) //0
+    (0.01 $mhalf_width $mhalf_width) //1
+    (0.01  $half_width $mhalf_width) //2
+    (0     $half_width $mhalf_width) //3
+    (0    $mhalf_width  $half_width) //4
+    (0.01 $mhalf_width  $half_width) //5
+    (0.01  $half_width  $half_width) //6
+    (0     $half_width  $half_width) //7
 );
 
 blocks          
 (
-    hex (0 1 2 3 4 5 6 7) (64 48 48) simpleGrading (1 1 1)
+    hex (0 1 2 3 4 5 6 7) (64 $nside $nside) simpleGrading (1 1 1)
 );
 
 edges           
