@@ -2,7 +2,7 @@
   =========                 |
   \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
    \\    /   O peration     |
-    \\  /    A nd           | Copyright (C) 2011-2015 OpenFOAM Foundation
+    \\  /    A nd           | Copyright (C) 2011-2016 OpenFOAM Foundation
      \\/     M anipulation  |
 -------------------------------------------------------------------------------
 License
@@ -41,7 +41,7 @@ Description
 #include "turbulenceModel.H"
 #include "CompressibleTurbulenceModel.H"
 #include "pimpleControl.H"
-#include "fvIOoptionList.H"
+#include "fvOptions.H"
 #include "fixedFluxPressureFvPatchScalarField.H"
 #include "gaussLaplacianScheme.H"
 #include "uncorrectedSnGrad.H"
@@ -61,13 +61,19 @@ int main(int argc, char *argv[])
 
     #include "createTimeControls.H"
     #include "createFields.H"
-    #include "createMRF.H"
     autoPtr<translationalFrame> frameOfReference (
         translationalFrame::New(mesh)
     );
     frameOfReference->registerVelocity(U);
     #include "createFvOptions.H"
     #include "initContinuityErrs.H"
+
+    volScalarField& alpha2(mixture.alpha2());
+    const dimensionedScalar& rho1 = mixture.rhod();
+    const dimensionedScalar& rho2 = mixture.rhoc();
+    relativeVelocityModel& UdmModel(UdmModelPtr());
+
+    turbulence->validate();
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 

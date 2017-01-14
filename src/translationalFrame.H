@@ -38,12 +38,12 @@ SourceFiles
 #ifndef translationalFrame_H
 #define translationalFrame_H
 
-#include "functionObjectFile.H"
-#include "fvMesh.H"
-#include "dimensionedTypes.H"
 #include "Switch.H"
-#include <vector>
+#include "dimensionedTypes.H"
 #include "frameAwareBoundary.H"
+#include "writeFiles.H"
+#include "fvMesh.H"
+#include <vector>
 
 #include "autoPtr.H"
 #include "runTimeSelectionTables.H"
@@ -55,7 +55,7 @@ namespace Foam {
                           Class translationalFrame Declaration
 \*---------------------------------------------------------------------------*/
 
-class translationalFrame : public functionObjectFile {
+class translationalFrame : public functionObjects::writeFiles {
   private:
     //- Disallow default bitwise copy construct
     translationalFrame(const translationalFrame &);
@@ -74,7 +74,7 @@ class translationalFrame : public functionObjectFile {
     std::vector<frameAwareBoundary *> registeredPatches;
 
     virtual vector calculate_acceleration(const volScalarField &,
-                                  const volSymmTensorField &) = 0;
+                                          const volSymmTensorField &) = 0;
 
   public:
     TypeName("translationalFrame");
@@ -86,12 +86,13 @@ class translationalFrame : public functionObjectFile {
                                  (mesh, dict));
 
     // Selector
-    static autoPtr<translationalFrame>
-    New(const fvMesh &mesh);
-    
+    static autoPtr<translationalFrame> New(const fvMesh &mesh);
+
     translationalFrame(const fvMesh &, const IOdictionary &);
 
     virtual ~translationalFrame() {}
+
+    bool virtual execute();
 
     void registerVelocity(volVectorField &U);
     void correctBoundaryVelocity(volVectorField &U) const;

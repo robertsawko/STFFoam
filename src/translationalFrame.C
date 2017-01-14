@@ -23,9 +23,9 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "translationalFrame.H"
 #include "fvCFD.H"
 #include "geometricOneField.H"
+#include "translationalFrame.H"
 #include "wordReList.H"
 
 namespace Foam {
@@ -46,31 +46,30 @@ Foam::wordList createFileNames() {
 
 Foam::translationalFrame::translationalFrame(const fvMesh &mesh,
                                              const IOdictionary &dict)
-    : functionObjectFile(mesh, "frame", createFileNames()), dict_(dict),
-      mesh_(mesh), VF_(vector::zero), aF_(vector::zero),
+    : functionObjects::writeFiles("frame", mesh.time(), dict, "frame"),
+      dict_(dict), mesh_(mesh), VF_(vector::zero), aF_(vector::zero),
       log_(dict_.lookupOrDefault<Switch>("log", false)),
       UName_(dict_.lookupOrDefault<word>("UName", "U")) {
 
-    createFiles();
+    resetNames(createFileNames());
+    // createFiles();
 }
 
 void Foam::translationalFrame::registerVelocity(volVectorField &U) {
-    volVectorField::GeometricBoundaryField &patches = U.boundaryField();
 
-    forAll(patches, patchi) {
-        fvPatchVectorField &currPatch = patches[patchi];
-        if (isA<frameAwareBoundary>(currPatch)) {
-            Info << "Registering: " << currPatch.patch().name() << " patch of "
-                 << UName_ << " field. " << endl;
+    forAll(U.boundaryField(), patchi) {
+        fvPatchVectorField &currentPatch = U.boundaryFieldRef()[patchi];
+        if (isA<frameAwareBoundary>(currentPatch)) {
+            Info << "Registering: " << currentPatch.patch().name()
+                 << " patch of " << UName_ << " field. " << endl;
             frameAwareBoundary &p =
-                dynamic_cast<frameAwareBoundary&>(currPatch);
+                dynamic_cast<frameAwareBoundary &>(currentPatch);
             registeredPatches.push_back(&p);
         }
     }
 }
 
-autoPtr<translationalFrame>
-translationalFrame::New(const fvMesh &mesh) {
+autoPtr<translationalFrame> translationalFrame::New(const fvMesh &mesh) {
     IOdictionary dict = IOdictionary(IOobject("STFProperties",
                                               mesh.time().constant(),
                                               mesh,
@@ -122,6 +121,12 @@ void Foam::translationalFrame::update(const volScalarField &p,
                 << setw(1) << " " << aF_.y() << setw(1) << " " << aF_.z()
                 << setw(1) << endl;
     }
+}
+
+
+bool Foam::translationalFrame::execute()
+{
+    return true;
 }
 
 // ************************************************************************* //

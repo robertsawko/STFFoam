@@ -56,8 +56,8 @@ Foam::STFScouringInflowVelocityFvPatchVectorField::
         const DimensionedField<vector, volMesh> &iF,
         const dictionary &dict)
     : fixedValueFvPatchField<vector>(p, iF),
-      pipeDiameter_(DataEntry<scalar>::New("pipeDiameter", dict)),
-      depositHeight_(DataEntry<scalar>::New("depositHeight", dict)) {
+      pipeDiameter_(Function1<scalar>::New("pipeDiameter", dict)),
+      depositHeight_(Function1<scalar>::New("depositHeight", dict)) {
     const scalar t = this->db().time().timeOutputValue();
     fvPatchField<vector>::operator=(vectorField("value", dict, p.size()));
 }

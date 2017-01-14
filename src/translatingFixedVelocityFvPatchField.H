@@ -63,9 +63,9 @@ SourceFiles
 #ifndef translatingFixedVelocityFvPatchField_H
 #define translatingFixedVelocityFvPatchField_H
 
+#include "Function1.H"
 #include "fixedValueFvPatchFields.H"
 #include "frameAwareBoundary.H"
-#include "DataEntry.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -75,11 +75,12 @@ namespace Foam {
                 Class translatingFixedVelocityFvPatchField Declaration
 \*---------------------------------------------------------------------------*/
 
-class translatingFixedVelocityFvPatchField : public fixedValueFvPatchVectorField,
-                                         public frameAwareBoundary {
+class translatingFixedVelocityFvPatchField
+    : public fixedValueFvPatchVectorField,
+      public frameAwareBoundary {
     // Private data
 
-    autoPtr<DataEntry<vector>> fixedFrameValue_;
+    autoPtr<Function1<vector>> fixedFrameValue_;
 
   public:
     //- Runtime type information
@@ -88,23 +89,26 @@ class translatingFixedVelocityFvPatchField : public fixedValueFvPatchVectorField
     // Constructors
 
     //- Construct from patch and internal field
-    translatingFixedVelocityFvPatchField(const fvPatch &,
-                                     const DimensionedField<vector, volMesh> &);
+    translatingFixedVelocityFvPatchField(
+        const fvPatch &, const DimensionedField<vector, volMesh> &);
 
     //- Construct from patch, internal field and dictionary
-    translatingFixedVelocityFvPatchField(const fvPatch &,
-                                     const DimensionedField<vector, volMesh> &,
-                                     const dictionary &);
+    translatingFixedVelocityFvPatchField(
+        const fvPatch &,
+        const DimensionedField<vector, volMesh> &,
+        const dictionary &);
 
     //- Construct by mapping given translatingFixedVelocityFvPatchField
     //  onto a new patch
-    translatingFixedVelocityFvPatchField(const translatingFixedVelocityFvPatchField &,
-                                     const fvPatch &,
-                                     const DimensionedField<vector, volMesh> &,
-                                     const fvPatchFieldMapper &);
+    translatingFixedVelocityFvPatchField(
+        const translatingFixedVelocityFvPatchField &,
+        const fvPatch &,
+        const DimensionedField<vector, volMesh> &,
+        const fvPatchFieldMapper &);
 
     //- Construct as copy
-    translatingFixedVelocityFvPatchField(const translatingFixedVelocityFvPatchField &);
+    translatingFixedVelocityFvPatchField(
+        const translatingFixedVelocityFvPatchField &);
     virtual ~translatingFixedVelocityFvPatchField() {}
 
     //- Construct and return a clone
@@ -114,8 +118,9 @@ class translatingFixedVelocityFvPatchField : public fixedValueFvPatchVectorField
     }
 
     //- Construct as copy setting internal field reference
-    translatingFixedVelocityFvPatchField(const translatingFixedVelocityFvPatchField &,
-                                     const DimensionedField<vector, volMesh> &);
+    translatingFixedVelocityFvPatchField(
+        const translatingFixedVelocityFvPatchField &,
+        const DimensionedField<vector, volMesh> &);
 
     //- Construct and return a clone setting internal field reference
     virtual tmp<fvPatchVectorField>

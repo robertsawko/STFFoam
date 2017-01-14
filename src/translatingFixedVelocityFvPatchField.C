@@ -23,21 +23,23 @@ License
 
 \*---------------------------------------------------------------------------*/
 
-#include "translatingFixedVelocityFvPatchField.H"
 #include "addToRunTimeSelectionTable.H"
+#include "translatingFixedVelocityFvPatchField.H"
 
 // * * * * * * * * * * * * * * * * Constructors  * * * * * * * * * * * * * * //
 
-Foam::translatingFixedVelocityFvPatchField::translatingFixedVelocityFvPatchField(
-    const fvPatch &p, const DimensionedField<vector, volMesh> &iF)
+Foam::translatingFixedVelocityFvPatchField::
+    translatingFixedVelocityFvPatchField(
+        const fvPatch &p, const DimensionedField<vector, volMesh> &iF)
     : fixedValueFvPatchField<vector>(p, iF), frameAwareBoundary(),
       fixedFrameValue_() {}
 
-Foam::translatingFixedVelocityFvPatchField::translatingFixedVelocityFvPatchField(
-    const translatingFixedVelocityFvPatchField &ptf,
-    const fvPatch &p,
-    const DimensionedField<vector, volMesh> &iF,
-    const fvPatchFieldMapper &mapper)
+Foam::translatingFixedVelocityFvPatchField::
+    translatingFixedVelocityFvPatchField(
+        const translatingFixedVelocityFvPatchField &ptf,
+        const fvPatch &p,
+        const DimensionedField<vector, volMesh> &iF,
+        const fvPatchFieldMapper &mapper)
     : fixedValueFvPatchField<vector>(p, iF), // bypass mapper
       fixedFrameValue_(ptf.fixedFrameValue_().clone().ptr()) {
     // Evaluate since value not mapped
@@ -46,30 +48,33 @@ Foam::translatingFixedVelocityFvPatchField::translatingFixedVelocityFvPatchField
                                      currentVelocity());
 }
 
-Foam::translatingFixedVelocityFvPatchField::translatingFixedVelocityFvPatchField(
-    const fvPatch &p,
-    const DimensionedField<vector, volMesh> &iF,
-    const dictionary &dict)
+Foam::translatingFixedVelocityFvPatchField::
+    translatingFixedVelocityFvPatchField(
+        const fvPatch &p,
+        const DimensionedField<vector, volMesh> &iF,
+        const dictionary &dict)
     : fixedValueFvPatchField<vector>(p, iF),
-      fixedFrameValue_(DataEntry<vector>::New("fixedFrameValue", dict)) {
+      fixedFrameValue_(Function1<vector>::New("fixedFrameValue", dict)) {
     const scalar t = this->db().time().timeOutputValue();
     fvPatchField<vector>::operator=(vectorField("value", dict, p.size()));
 }
 
-Foam::translatingFixedVelocityFvPatchField::translatingFixedVelocityFvPatchField(
-    const translatingFixedVelocityFvPatchField &ptf)
+Foam::translatingFixedVelocityFvPatchField::
+    translatingFixedVelocityFvPatchField(
+        const translatingFixedVelocityFvPatchField &ptf)
     : fixedValueFvPatchField<vector>(ptf), frameAwareBoundary(ptf),
       fixedFrameValue_(ptf.fixedFrameValue_.valid()
-                        ? ptf.fixedFrameValue_().clone().ptr()
-                        : nullptr) {}
+                           ? ptf.fixedFrameValue_().clone().ptr()
+                           : nullptr) {}
 
-Foam::translatingFixedVelocityFvPatchField::translatingFixedVelocityFvPatchField(
-    const translatingFixedVelocityFvPatchField &ptf,
-    const DimensionedField<vector, volMesh> &iF)
+Foam::translatingFixedVelocityFvPatchField::
+    translatingFixedVelocityFvPatchField(
+        const translatingFixedVelocityFvPatchField &ptf,
+        const DimensionedField<vector, volMesh> &iF)
     : fixedValueFvPatchField<vector>(ptf, iF), frameAwareBoundary(ptf),
       fixedFrameValue_(ptf.fixedFrameValue_.valid()
-                        ? ptf.fixedFrameValue_().clone().ptr()
-                        : nullptr) {
+                           ? ptf.fixedFrameValue_().clone().ptr()
+                           : nullptr) {
     /*
     // For safety re-evaluate
     const scalar t = this->db().time().timeOutputValue();

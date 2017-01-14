@@ -2,7 +2,7 @@
 
 frameOfReference->correctBoundaryVelocity(U);
 
-tmp<fvVectorMatrix> UEqn
+tmp<fvVectorMatrix> tUEqn
 (
     fvm::ddt(U) + fvm::div(phi, U)
   + frameOfReference->aF()
@@ -10,14 +10,15 @@ tmp<fvVectorMatrix> UEqn
  ==
     fvOptions(U)
 );
+fvVectorMatrix& UEqn = tUEqn.ref();
 
-UEqn().relax();
+UEqn.relax();
 
-fvOptions.constrain(UEqn());
+fvOptions.constrain(UEqn);
 
 if (pimple.momentumPredictor())
 {
-    solve(UEqn() == -fvc::grad(p));
+    solve(UEqn == -fvc::grad(p));
 
     fvOptions.correct(U);
 }

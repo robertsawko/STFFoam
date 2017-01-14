@@ -65,7 +65,7 @@ SourceFiles
 
 #include "fixedValueFvPatchFields.H"
 #include "frameAwareBoundary.H"
-#include "DataEntry.H"
+#include "Function1.H"
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
@@ -80,8 +80,8 @@ class STFScouringInflowVelocityFvPatchVectorField
       public frameAwareBoundary {
     // Private data
 
-    autoPtr<DataEntry<scalar>> pipeDiameter_;
-    autoPtr<DataEntry<scalar>> depositHeight_;
+    autoPtr<Function1<scalar>> pipeDiameter_;
+    autoPtr<Function1<scalar>> depositHeight_;
 
   public:
     //- Runtime type information
