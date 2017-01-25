@@ -52,7 +52,7 @@ Foam::translationalFrame::translationalFrame(const fvMesh &mesh,
       UName_(dict_.lookupOrDefault<word>("UName", "U")) {
 
     resetNames(createFileNames());
-    // createFiles();
+    createFiles();
 }
 
 void Foam::translationalFrame::registerVelocity(volVectorField &U) {
