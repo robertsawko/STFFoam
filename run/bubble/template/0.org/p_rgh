@@ -35,29 +35,29 @@ boundaryField
 
     top          
     {
-        type            buoyantPressure;
+        type            zeroGradient;
 	value		uniform 0;
     }
     left          
     {
-        type            buoyantPressure;
+        type            zeroGradient;
 	value		uniform 0;
     }
 
     right          
     {
-        type            buoyantPressure;
+        type            zeroGradient;
 	value		uniform 0;
     }
 
     back
     {
-        type            buoyantPressure;
+        type            zeroGradient;
 	value		uniform 0;
     }
     front
     {
-        type            buoyantPressure;
+        type            zeroGradient;
 	value		uniform 0;
     }
 }

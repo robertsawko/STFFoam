@@ -20,39 +20,34 @@ internalField   uniform (0.0 0 0);
 
 boundaryField
 {
-          
     top
     {
-        type            uniformFixedVelocity;
-        uniformValue    (0 0 0);
+        type            translatingFixedVelocity;
+        fixedFrameValue constant (0 0 0);
         value           uniform (0 0 0);
     }
-    left          
+    left
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            zeroGradient;
     }
 
-    right          
+    right
     {
-        type            fixedValue;
-        value           uniform (0 0 0);
+        type            zeroGradient;
     }
 
-    bottom          
+    bottom
     {
         type            zeroGradient;
     }
 
     back
     {
-        type            fixedValue;
-        value		    uniform (0 0 0);
+        type            zeroGradient;
     }
     front
     {
-        type            fixedValue;
-        value		    uniform (0 0 0);
+        type            zeroGradient;
     }
 }
 

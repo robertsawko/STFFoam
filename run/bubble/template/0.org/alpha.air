@@ -40,13 +40,11 @@ boundaryField
     }
     front
     {
-        type            fixedValue;
-	value  		uniform 0;
+        type            zeroGradient;
     }
     back
     {
-        type            fixedValue;
-	value  		uniform 0;
+        type            zeroGradient;
     }
 }
 
