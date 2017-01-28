@@ -57,10 +57,10 @@ Foam::centreOfVolume::centreOfVolume(const fvMesh &mesh,
 vector
 Foam::centreOfVolume::calculate_acceleration(const volScalarField &p,
                                              const volSymmTensorField &R) {
-    const Time& t = mesh_.time();
+    const Time &t = mesh_.time();
 
     dimensionedVector xcurrent(
-        "xd",
+        "x_c",
         fvc::domainIntegrate(alpha_ * mesh_.C()) // centre of mass
             /
             fvc::domainIntegrate(alpha_));
