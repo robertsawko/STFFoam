@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  1.7.1                                 |
+|  \\    /   O peration     | Version:  4.0.0                                 |
 |   \\  /    A nd           | Web:      www.OpenFOAM.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -10,25 +10,10 @@ FoamFile
     version     2.0;
     format      ascii;
     class       dictionary;
-    location    "system";
-    object      funkySetFieldsDict;
+    object      setBubbleDict;
 }
-
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-expressions
-(
-	initZero
-	{
-		field alpha.air;
-		create false;
-		expression "0";
-		keepPatches true ;
-	}
-	setBubble
-	{
-		field       alpha.air ;
-		expression  "1" ;
-		keepPatches true ;
-                condition   "mag(pos() - vector(0.007, 0, 0))<0.0005";
-	}
-);
+
+#include "blockMeshDict.cfg";
+radius #calc "$diameter / 2.0";
+x_position #calc "0.7 * $height / 2.0";

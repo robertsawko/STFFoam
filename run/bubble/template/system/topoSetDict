@@ -15,6 +15,13 @@ FoamFile
 
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+#include "blockMeshDict.cfg"
+
+lateral         #calc "$width / 4";
+mlateral        #calc "-$lateral";
+top             #calc "0.8 * $height";
+bottom          #calc "0.2 * $height";
+
 actions
 (
     {
@@ -24,7 +31,9 @@ actions
         source  boxToCell;
         sourceInfo
         {
-            box (0.003 -0.0015 -0.0015) (0.008  0.0015  0.0015);
+            box 
+                ($bottom $mlateral $mlateral)
+                ($top     $lateral  $lateral);
         }
     }
 );

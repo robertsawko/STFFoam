@@ -16,8 +16,7 @@ FoamFile
 
 convertToMeters 1;
 
-width 8e-3;
-nside 50; 
+#include "blockMeshDict.cfg"
 
 half_width  #calc "$width / 2";
 mhalf_width #calc "-$half_width";
@@ -26,14 +25,14 @@ nl #calc "floor(0.01 / $width * $nside)";
 
 vertices        
 (
-    (0    $mhalf_width $mhalf_width) //0
-    (0.01 $mhalf_width $mhalf_width) //1
-    (0.01  $half_width $mhalf_width) //2
-    (0     $half_width $mhalf_width) //3
-    (0    $mhalf_width  $half_width) //4
-    (0.01 $mhalf_width  $half_width) //5
-    (0.01  $half_width  $half_width) //6
-    (0     $half_width  $half_width) //7
+    (0       $mhalf_width $mhalf_width) //0
+    ($height $mhalf_width $mhalf_width) //1
+    ($height  $half_width $mhalf_width) //2
+    (0        $half_width $mhalf_width) //3
+    (0       $mhalf_width  $half_width) //4
+    ($height $mhalf_width  $half_width) //5
+    ($height  $half_width  $half_width) //6
+    (0        $half_width  $half_width) //7
 );
 
 blocks          

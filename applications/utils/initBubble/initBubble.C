@@ -49,8 +49,6 @@ int main(int argc, char *argv[])
     #include "setRootCase.H"
     #include "createTime.H"
     #include "createMesh.H"
-    //#include "createControl.H"
-    //#include "createTimeControls.H"
 
     #include "createFields.H"
 

@@ -16,4 +16,4 @@ topoSet > log.topoSetDict
 refineMesh -overwrite > log.refineMesh
 #4. Initialise the domain with funkySetFileds
 cp -r 0.org/* 0
-funkySetFields -latestTime 2>&1 |tee log.funkySetFileds
+initBubble 2>&1 |tee log.initBubble

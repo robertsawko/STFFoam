@@ -1,3 +1,12 @@
+IOdictionary setBubbleDict = IOdictionary(IOobject("setBubbleDict",
+                                          mesh.time().system(),
+                                          mesh,
+                                          IOobject::MUST_READ,
+                                          IOobject::NO_WRITE));
+
+
+scalar radius = readScalar(setBubbleDict.lookup("radius"));
+scalar x_position = readScalar(setBubbleDict.lookup("x_position"));
 volVectorField x
 (
     IOobject
@@ -8,7 +17,7 @@ volVectorField x
         IOobject::NO_READ,
         IOobject::AUTO_WRITE
     ),
-    mesh.C() - dimensionedVector("x0", dimLength, vector(0.007, 0.0, 0.0))
+    mesh.C() - dimensionedVector("x0", dimLength, vector(x_position, 0.0, 0.0))
 );
 
 volScalarField r
