@@ -52,13 +52,9 @@ int main(int argc, char *argv[])
 
     #include "createFields.H"
 
-    //#include "readTimeControls.H"
-    //#include "CourantNo.H"
-    //#include "setInitialDeltaT.H"
-
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-    dimensionedScalar R("R", dimLength, 0.0005);
+    dimensionedScalar R("R", dimLength, radius);
     alpha1 == 0.5 + 0.5 * tanh(100 * (r - R)/R);
     alpha1.write();
     //Info<< r << endl;
